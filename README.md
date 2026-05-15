@@ -1,23 +1,26 @@
-# TGI — Dense Community Detection for Multi-Omics Integration
+# TriGer — Dense Community Detection for Multi-Omics Integration
 
-MATLAB implementation of the dense subgraph detection algorithm accompanying our academic paper.
+MATLAB implementation of the **TriGer** algorithm accompanying our academic paper.
 
 ## Overview
 
-This repository provides greedy peeling algorithms for detecting dense communities from multi-modal omics data. The method operates on three correlation matrices simultaneously:
+TriGer identifies dense bipartite communities from multi-modal omics data by jointly analysing three correlation matrices:
 - **X** (m×m): symmetric correlation matrix for data type 1 (e.g., transcriptomics)
 - **Y** (n×n): symmetric correlation matrix for data type 2 (e.g., metabolomics)
 - **XY** (m×n): cross-association matrix between the two data types
 
-Community size is controlled by a penalty parameter λ ∈ [1, 2]: higher values favor smaller, denser communities.
+Community size is controlled by a penalty parameter λ ∈ [1, 2]: higher values favour smaller, denser communities.
 
 ## Repository Structure
 
 ```
-TGI/
+TriGer/
 ├── methods/          # Core detection and sorting algorithms
 ├── visualization/    # Plotting functions for results
-└── simulation/       # Simulation scripts for benchmarking and validation
+├── simulation/       # Simulation scripts for benchmarking and validation
+└── Real_data/        # Real data analysis scripts and correlation matrices
+    ├── CRC/          # Colorectal cancer (CRC) dataset
+    └── IBD/          # Inflammatory bowel disease (IBD) dataset
 ```
 
 ## Methods
@@ -52,15 +55,24 @@ TGI/
 | `plot_all_result.m` | Plot all detected communities on the full or subsetted matrix |
 | `nice_ticks.m` | Helper to generate clean axis tick marks |
 
+## Real Data
+
+### CRC — Colorectal Cancer
+- `CRC_correlation_matrix.mat` — pre-computed Pearson correlation matrices (Treat/Control groups)
+- `CRC_Analysis.m` — full TriGer analysis: community detection, visualisation, gene lists
+
+### IBD — Inflammatory Bowel Disease
+- `IBD_Analysis.m` — TriGer analysis comparing CD vs UC vs nonIBD groups
+
 ## Simulation
 
 Scripts for generating synthetic data and benchmarking detection performance.
 
 | File | Description |
 |------|-------------|
-| `matrix_1_generate.m` | Generate synthetic population-level correlation matrix with planted communities |
-| `matrix_1_TGI.m` | Run TGI detection on simulated data and evaluate TPR/TNR across repeated samples |
-| `matrix_1_benmark.R` | R benchmark comparing TGI against alternative methods on the same simulated data |
+| `matrix_1_generate.m` | Generate synthetic correlation matrix with planted communities |
+| `matrix_1_TGI.m` | Run TriGer on simulated data and evaluate TPR/TNR across repeated samples |
+| `matrix_1_benmark.R` | R benchmark comparing TriGer against alternative methods |
 
 ## Usage
 
