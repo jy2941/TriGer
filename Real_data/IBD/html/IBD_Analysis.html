@@ -1,0 +1,2364 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      -->
+<title>Dense Community Detection: CD vs UC vs nonIBD</title>
+<meta name="generator" content="MATLAB 23.2">
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/">
+<meta name="DC.date" content="2026-05-15">
+<meta name="DC.source" content="IBD_Analysis.m">
+<style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style>
+</head>
+<body>
+<div class="content">
+<h1>Dense Community Detection: CD vs UC vs nonIBD</h1>
+<!--introduction-->
+<p>Identifies co-expression communities across three diagnostic groups: CD &mdash; Crohn's Disease UC &mdash; Ulcerative Colitis nonIBD &mdash; healthy controls</p>
+<p>Input: CleanCorNonzero.mat R1, P1 &mdash; correlation matrices for CD group R2, P2 &mdash; correlation matrices for UC group R3, P3 &mdash; correlation matrices for nonIBD group name &mdash; feature names (m transcriptomics + n metabolomics)</p>
+<p>Pipeline: # Load pre-computed correlation matrices for all three groups # Build combined P and R: max significance, max absolute correlation # Construct bipartite weight matrix Wp, threshold at -log10(p) &gt;= 2 # Greedy peeling to detect dense bipartite communities # Refine Cluster 2 by re-peeling its X side # Sort and visualise results # Report per-cluster mean correlation across CD, UC, nonIBD</p>
+<!--/introduction-->
+<h2>Contents</h2>
+<div>
+<ul>
+<li>
+<a href="#1">Setup</a>
+</li>
+<li>
+<a href="#2">Load Correlation Matrices</a>
+</li>
+<li>
+<a href="#3">Build Combined Correlation and Significance Matrices</a>
+</li>
+<li>
+<a href="#4">Construct Bipartite Weight Matrix</a>
+</li>
+<li>
+<a href="#5">Initial Community Detection: Greedy Peeling</a>
+</li>
+<li>
+<a href="#6">Refine Cluster 2: Re-peel X Side</a>
+</li>
+<li>
+<a href="#7">Sort and Finalise Clusters</a>
+</li>
+<li>
+<a href="#8">Heatmaps: Combined Significance and Correlation</a>
+</li>
+<li>
+<a href="#9">3-Panel Overview: Combined R (CD-dominant)</a>
+</li>
+<li>
+<a href="#10">3-Panel Overview: nonIBD Group (R3)</a>
+</li>
+<li>
+<a href="#11">Per-cluster Mean Correlation: CD vs UC vs nonIBD</a>
+</li>
+<li>
+<a href="#12">Detected Gene / Metabolite Lists</a>
+</li>
+</ul>
+</div>
+<h2 id="1">Setup</h2>
+<pre class="codeinput">addpath(<span class="string">'../../methods'</span>)
+addpath(<span class="string">'../../visualization'</span>)
+
+set(0, <span class="string">'DefaultAxesFontSize'</span>, 18);
+set(0, <span class="string">'DefaultTextFontSize'</span>, 18);
+set(0, <span class="string">'DefaultAxesColor'</span>, <span class="string">'white'</span>);
+set(0, <span class="string">'DefaultFigureColor'</span>, <span class="string">'white'</span>);
+</pre>
+<pre class="codeoutput">Warning: Name is nonexistent or not a directory:
+/Users/yujiaao/Dropbox/Omics/publish/../../methods 
+Warning: Name is nonexistent or not a directory:
+/Users/yujiaao/Dropbox/Omics/publish/../../visualization 
+</pre>
+<h2 id="2">Load Correlation Matrices</h2>
+<p>R1/P1 = CD, R2/P2 = UC, R3/P3 = nonIBD m = 17026 transcriptomics features (X), n = 476 metabolomics features (Y)</p>
+<pre class="codeinput">W = readtable(<span class="string">'IBDdata.csv'</span>);
+name = W.Properties.VariableNames;
+
+m = 17026;
+n = 476;
+
+<span class="comment">%W1: CD, W2: UC, W3: Control</span>
+W1 = W(strcmp(W.(<span class="string">'diagnosis'</span>), <span class="string">'CD'</span>), :);
+W1(:, end) = [];
+W2 = W(strcmp(W.(<span class="string">'diagnosis'</span>), <span class="string">'UC'</span>), :);
+W2(:, end) = [];
+W3 = W(strcmp(W.(<span class="string">'diagnosis'</span>), <span class="string">'nonIBD'</span>), :);
+W3(:, end) = [];
+
+T = table2array(W1);
+[R1, P1] = corr(T, <span class="string">'Rows'</span>, <span class="string">'pairwise'</span>);
+P1 = -log10(P1);
+T = table2array(W2);
+[R2, P2] = corr(T, <span class="string">'Rows'</span>, <span class="string">'pairwise'</span>);
+P2 = -log10(P2);
+T = table2array(W3);
+[R3, P3] = corr(T, <span class="string">'Rows'</span>, <span class="string">'pairwise'</span>);
+P3 = -log10(P3);
+</pre>
+<pre class="codeoutput">Warning: Column headers from the file were modified to make them valid MATLAB
+identifiers before creating variable names for the table. The original column
+headers are saved in the VariableDescriptions property.
+Set 'VariableNamingRule' to 'preserve' to use the original column headers as
+table variable names. 
+</pre>
+<h2 id="3">Build Combined Correlation and Significance Matrices</h2>
+<p>P = element-wise max across all three groups &mdash; keeps strongest signal. R = element-wise max by absolute value across CD, UC, nonIBD.</p>
+<pre class="codeinput">P = max(max(P1, P2), P3);
+
+[~, idx] = max(cat(3, abs(R1), abs(R2), abs(R3)), [], 3);
+R = R1;
+R(idx == 2) = R2(idx == 2);
+R(idx == 3) = R3(idx == 3);
+</pre>
+<h2 id="4">Construct Bipartite Weight Matrix</h2>
+<p>Wp = P(X, Y) block, entries below -log10(0.01) = 2 zeroed out.</p>
+<pre class="codeinput">Wp = P(1:m, (m+1):(m+n));
+Wp(Wp &lt; 2) = 0;
+
+figure;
+imagesc(P((m+1):(m+n), 1:m)); colorbar; colormap(jet); caxis([0 10]);
+title(<span class="string">'Bipartite significance matrix W_p  (Y \times X)'</span>);
+xlabel(<span class="string">'X (transcriptomics)'</span>); ylabel(<span class="string">'Y (metabolomics)'</span>);
+</pre>
+<img vspace="5" hspace="5" src="IBD_Analysis_01.png" alt=""> <h2 id="5">Initial Community Detection: Greedy Peeling</h2>
+<p>Threshold 1.6 controls minimum subgraph density.</p>
+<pre class="codeinput">result = greedy_peeling_XY_all(Wp, 1.6);
+result([3 4], :) = result([4 3], :);
+result(4, :) = {[]};
+</pre>
+<pre class="codeoutput">Round 1
+******************
+Round 2
+******************
+Round 3
+******************
+Round 4
+******************
+Round 5
+******************
+</pre>
+<h2 id="6">Refine Cluster 2: Re-peel X Side</h2>
+<pre class="codeinput">idx_X = cat(1, result{2,1});
+X = R(idx_X, idx_X);
+X = (X + X') / 2;
+test = greedy_peeling_X_all(X, 1.9);
+test = sort_result(X, test);
+result{2,1} = idx_X(cat(2, test{:,1}));
+</pre>
+<pre class="codeoutput">Round 1
+******************
+Round 2
+******************
+</pre>
+<h2 id="7">Sort and Finalise Clusters</h2>
+<pre class="codeinput">idx_X = 1:m;
+idx_Y = (m+1):(m+n);
+X  = R(idx_X, idx_X);
+Y  = R(idx_Y, idx_Y);
+XY = R(idx_X, idx_Y);
+result = sort_result_XandY(X, Y, result);
+result = result(:, [2 1]);
+
+n_clusters = sum(~cellfun(@isempty, result(:,1)));
+fprintf(<span class="string">'Clusters detected: %d\n'</span>, n_clusters);
+</pre>
+<pre class="codeoutput">Clusters detected: 3
+</pre>
+<h2 id="8">Heatmaps: Combined Significance and Correlation</h2>
+<pre class="codeinput">plot_all_result(P(idx_Y, idx_X), result, false, true, [0 10]);
+</pre>
+<img vspace="5" hspace="5" src="IBD_Analysis_02.png" alt=""> <h2 id="9">3-Panel Overview: Combined R (CD-dominant)</h2>
+<pre class="codeinput">plot3in1_v1(X, Y, XY, result, true, [200, 5], true);
+</pre>
+<img vspace="5" hspace="5" src="IBD_Analysis_03.png" alt=""> <h2 id="10">3-Panel Overview: nonIBD Group (R3)</h2>
+<pre class="codeinput">X3  = R3(idx_X, idx_X);
+Y3  = R3(idx_Y, idx_Y);
+XY3 = R3(idx_X, idx_Y);
+plot3in1_v1(X3, Y3, XY3, result, true, [200, 5], true);
+</pre>
+<img vspace="5" hspace="5" src="IBD_Analysis_04.png" alt=""> <h2 id="11">Per-cluster Mean Correlation: CD vs UC vs nonIBD</h2>
+<p>Rows = result clusters, columns = [CD mean, UC mean, nonIBD mean]. Compares whether each community is specific to a diagnostic group.</p>
+<pre class="codeinput">XY1 = R1(idx_X, idx_Y);
+XY2 = R2(idx_X, idx_Y);
+XY3 = R3(idx_X, idx_Y);
+
+fprintf(<span class="string">'\n%-10s  %-12s  %-12s  %-12s  %-12s  %-12s\n'</span>, <span class="keyword">...</span>
+    <span class="string">'Cluster'</span>, <span class="string">'X members'</span>, <span class="string">'Y members'</span>, <span class="string">'CD mean r'</span>, <span class="string">'UC mean r'</span>, <span class="string">'nonIBD mean r'</span>);
+fprintf(<span class="string">'%s\n'</span>, repmat(<span class="string">'-'</span>, 1, 74));
+
+<span class="keyword">for</span> i = 1:n_clusters
+    rows = result{i, 1};   <span class="comment">% metabolomics indices (Y, after column swap)</span>
+    cols = result{i, 2};   <span class="comment">% transcriptomics indices (X)</span>
+    <span class="keyword">if</span> ~isempty(rows) &amp;&amp; ~isempty(cols)
+        sub1 = XY1(cols, rows);
+        sub2 = XY2(cols, rows);
+        sub3 = XY3(cols, rows);
+        fprintf(<span class="string">'%-10d  %-12d  %-12d  %-12.4f  %-12.4f  %-12.4f\n'</span>, <span class="keyword">...</span>
+            i, numel(rows), numel(cols), <span class="keyword">...</span>
+            mean(sub1(:), <span class="string">'omitnan'</span>), mean(sub2(:), <span class="string">'omitnan'</span>), mean(sub3(:), <span class="string">'omitnan'</span>));
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+</pre>
+<pre class="codeoutput">
+Cluster     X members     Y members     CD mean r     UC mean r     nonIBD mean r
+--------------------------------------------------------------------------
+1           16            929           -0.0009       0.8329        -0.0655     
+2           10            887           -0.0017       0.7436        0.0124      
+3           9             45            0.8488        0.1422        0.0468      
+</pre>
+<h2 id="12">Detected Gene / Metabolite Lists</h2>
+<pre class="codeinput">result_named      = result;
+result_named(:,1) = cellfun(@(x) x + m, result(:,1), <span class="string">'UniformOutput'</span>, false);
+NameList          = cellfun(@(ix) name(ix), result_named, <span class="string">'UniformOutput'</span>, false);
+
+<span class="keyword">for</span> i = 1:n_clusters
+    fprintf(<span class="string">'\n=== Cluster %d ===\n'</span>, i);
+    fprintf(<span class="string">'Metabolomics (%d):\n'</span>,    numel(NameList{i,1}));
+    fprintf(<span class="string">'  %s\n'</span>, NameList{i,1}{:});
+    fprintf(<span class="string">'Transcriptomics (%d):\n'</span>, numel(NameList{i,2}));
+    fprintf(<span class="string">'  %s\n'</span>, NameList{i,2}{:});
+<span class="keyword">end</span>
+</pre>
+<pre class="codeoutput">
+=== Cluster 1 ===
+Metabolomics (16):
+  HILp_QI12494
+  HILp_QI12459
+  C18n_QI18
+  C18n_QI40
+  HILp_QI11212
+  HILp_QI9633
+  C18n_QI37
+  C18n_QI38
+  C8p_QI52
+  C18n_QI31
+  C18n_QI84
+  C8p_QI53
+  C18n_QI17
+  HILn_TF13
+  C8p_QI51
+  HILn_QI67
+Transcriptomics (929):
+  BCL7C
+  JTB
+  C16orf13
+  ANAPC11
+  GADD45GIP1
+  CUTA
+  TCEB2
+  NDUFB11
+  STUB1
+  TMEM205
+  SHARPIN
+  SAC3D1
+  BABAM1
+  TSR3
+  MRPL54
+  DUSP23
+  MRPL23
+  COX6B1
+  MALSU1
+  ARL2
+  NDUFB2
+  SNF8
+  C19orf24
+  NDUFB1
+  AURKAIP1
+  MRPS34
+  MYEOV2
+  RFXANK
+  LAGE3
+  PGLS
+  DCXR
+  HINT2
+  NDUFB8
+  NDUFB10
+  MRPL52
+  POLR2I
+  TRPT1
+  FAM50A
+  COPE
+  SHFM1
+  MYL6
+  ZNF593
+  NMRAL1
+  STXBP2
+  TMEM147
+  GSTP1
+  NAA10
+  NOSIP
+  AP2S1
+  FASTK
+  NEDD8
+  USE1
+  MRPL28
+  KRT10
+  HDGFRP2
+  B3GAT3
+  ATP5D
+  MPG
+  FKBP2
+  LSMD1
+  MRPL20
+  C19orf43
+  C14orf80
+  CDC34
+  EXOSC4
+  NDUFS6
+  UQCR10
+  FAM207A
+  ATP5I
+  CCDC107
+  CLTA
+  PSMB3
+  C12orf44
+  APRT
+  NBL1
+  C19orf70
+  SDHAF2
+  C19orf60
+  PRR24
+  COMMD5
+  TRAPPC2L
+  TSSC4
+  SELO
+  MRPL27
+  SNRPB
+  IFT27
+  CLPP
+  POLR2L
+  MMP24_AS1
+  PHPT1
+  ROMO1
+  LAMTOR2
+  SMIM4
+  RBM42
+  TMEM258
+  RPL36AL
+  STX10
+  MZT2A
+  B4GALT7
+  TMEM204
+  ZNF524
+  C9orf142
+  COMMD4
+  HCFC1R1
+  PIGQ
+  PYCARD
+  ZNHIT1
+  LSM7
+  TMSB10
+  TMEM223
+  DPM3
+  C11orf48
+  PDCD5
+  BAD
+  MRPS26
+  NDUFA7
+  MRPL2
+  TXNL4A
+  C17orf89
+  SERF2
+  CHCHD5
+  COX5B
+  FAM127B
+  RNASEH2C
+  NT5C
+  CITED4
+  UQCR11
+  RPL13
+  EMC6
+  MZT2B
+  ENDOG
+  CYB561D2
+  COX5A
+  NDUFB7
+  CYHR1
+  SMIM22
+  C11orf83
+  NDUFS8
+  RPL39L
+  NUDT22
+  C9orf16
+  APOA1BP
+  ZNF579
+  ANAPC15
+  NDUFS5
+  COMMD7
+  WDR83OS
+  HSD17B10
+  SF3B5
+  SCAND1
+  SIGIRR
+  NUDC
+  COX8A
+  NCBP2_AS2
+  ROM1
+  WDR13
+  LRRC45
+  ARPC3
+  ZNF428
+  CORO7
+  TXNRD2
+  COMMD3
+  ENKD1
+  PUSL1
+  CSNK2B
+  C14orf2
+  MRPL41
+  SLC39A3
+  TMED1
+  ISY1
+  POLR2F
+  TWF2
+  C6orf226
+  HES6
+  PRAF2
+  GTPBP6
+  FAM58A
+  ZNF771
+  C1orf122
+  RABL6
+  MBD3
+  NR2F6
+  CHCHD1
+  OXLD1
+  NDUFAB1
+  PAFAH1B3
+  PTRHD1
+  ZFPL1
+  HMG20B
+  C1QTNF1
+  ASPSCR1
+  ATP5E
+  PPP1R14B
+  TPGS1
+  MRPL14
+  NENF
+  C1orf86
+  SSSCA1
+  NDUFS3
+  FBXL15
+  POP7
+  EVA1B
+  ZNHIT2
+  C21orf2
+  DRAP1
+  CCDC12
+  NDUFA9
+  PIH1D1
+  KPTN
+  B3GALT6
+  FLYWCH2
+  SDHAF1
+  RARRES2
+  NOP10
+  TMEM160
+  RPL8
+  CCHCR1
+  TNFRSF4
+  CCDC124
+  TAF10
+  ADAP1
+  AKIP1
+  TIMM13
+  MRPL4
+  PTRH1
+  APOPT1
+  TFPT
+  ATPIF1
+  PMF1
+  COMMD1
+  PGP
+  MRPL12
+  CCDC85B
+  EIF3K
+  RP11_673C5_1
+  QTRT1
+  MVB12A
+  YDJC
+  C15orf61
+  FAM173A
+  PSMG3
+  ANKS3
+  NAGLU
+  MRPL11
+  NME3
+  ALKBH7
+  COX4I1
+  PIN1
+  POLR2J
+  NARFL
+  PNKP
+  MFSD5
+  POP5
+  SIVA1
+  C1orf233
+  ZNF205
+  MRPS21
+  C8orf82
+  NDUFA3
+  MRPL36
+  RP11_304L19_5
+  RP11_425L10_1
+  PTOV1
+  MLST8
+  NUDT8
+  NDUFA6
+  SSNA1
+  DPP7
+  ZNF444
+  NDUFA1
+  CKMT1A
+  LAMTOR4
+  FAM195A
+  CHMP6
+  SAMD11
+  TBCB
+  C19orf10
+  ARPC4
+  GNB2
+  UBALD2
+  TSEN34
+  MXD3
+  CHMP2A
+  RRAS
+  MSRB2
+  PPP4C
+  SSBP4
+  HSF1
+  MFSD3
+  UCHL3
+  IER5L
+  SLIRP
+  EXD3
+  RFNG
+  MRPL51
+  UQCC2
+  NMB
+  S100A3
+  LSM4
+  PSMB6
+  MFSD12
+  RPL3P4
+  RP11_488C13_5
+  TIMM8B
+  H2AFJ
+  UBE2J2
+  CYBA
+  C7orf50
+  ISOC2
+  RPUSD3
+  GPX1
+  UXT
+  COX7A2
+  MGMT
+  SMDT1
+  KLHDC9
+  COX14
+  TALDO1
+  TRAPPC2P1
+  KRTCAP3
+  C12orf57
+  DCTN3
+  SELM
+  SPSB3
+  WIBG
+  hsa_mir_1199
+  CTD_2319I12_1
+  RNASET2
+  COX6A1
+  MRPS18A
+  GPS1
+  ANG
+  STK32C
+  RP11_295G20_2
+  CCS
+  COPS6
+  ERGIC3
+  CRIP2
+  NDUFA8
+  PSMB7
+  SCO2
+  TUT1
+  CIB1
+  MCAT
+  PSENEN
+  PPP1R35
+  CHCHD10
+  RPLP2
+  RPS19BP1
+  CTU2
+  HIST3H2A
+  H2AFX
+  RP3_395M20_12
+  ABHD14A
+  SSU72
+  MRPS12
+  TRADD
+  TMEM11
+  FAU
+  BLOC1S1
+  HES4
+  ABHD17A
+  OR7E38P
+  SENP3
+  ZSWIM7
+  LINC00116
+  LSM2
+  RP11_742N3_1
+  CUEDC2
+  SPON2
+  TARBP2
+  MRPS15
+  UBE2S
+  UBL5
+  COX7B
+  B3GALT4
+  HRAS
+  HOXA_AS4
+  NUBP2
+  NDUFB9
+  ZNF580
+  MRPL43
+  SMPD2
+  C4orf48
+  DNAJB2
+  MRP63
+  WDR45
+  ZNF358
+  ECI1
+  MRPS2
+  C21orf33
+  SNRPD2
+  VEGFB
+  ATRAID
+  RGCC
+  DGCR6L
+  MRPS11
+  DGUOK
+  KMT2E_AS1
+  UQCRB
+  ZNF446
+  EPHX3
+  NTHL1
+  NELFE
+  MOB2
+  C1orf35
+  ORAI3
+  ORAI1
+  RPUSD1
+  PTDSS2
+  TSTD1
+  TIMP1
+  RPL36
+  MRPL16
+  COMTD1
+  GNG5
+  A4GALT
+  SERTAD4_AS1
+  SNRNP35
+  SLC9A3R2
+  GTF2H5
+  MIR4435_1HG
+  DNAJC17
+  URAD
+  DOHH
+  GCDH
+  IAH1
+  NDUFS7
+  CCDC61
+  RRP1
+  E4F1
+  PRPF31
+  DPM2
+  CRYBB2P1
+  THAP4
+  ICT1
+  TRIOBP
+  C16orf91
+  RHOC
+  ACTL10
+  CTB_63M22_1
+  H1FX_AS1
+  NUDT16L1
+  BRAT1
+  LAMTOR1
+  DUS1L
+  RNASEH2A
+  FBXW9
+  HSPB1
+  NOC4L
+  RNF126
+  CCL26
+  NDUFA11
+  METTL23
+  RPL18A
+  RPL28
+  ATP5H
+  TSPO
+  TMA7
+  PTGES2
+  PGF
+  USMG5
+  KRT7
+  CMC2
+  GUK1
+  MVD
+  ZDHHC12
+  BRMS1
+  RP13_1032I1_7
+  TBC1D7
+  NAT14
+  RASSF7
+  DNAJC4
+  PLEKHJ1
+  HOXD9
+  ZNF32
+  C19orf53
+  IMP3
+  IFI27L2
+  MRPL55
+  WDR74
+  RPL3P7
+  ISCA2
+  PWWP2B
+  KANK3
+  MPDU1
+  CLDN3
+  NMU
+  MED19
+  PPDPF
+  ITLN1
+  MIEN1
+  FKBPL
+  ATP5L
+  PARK7
+  TXNDC17
+  RP13_582O9_5
+  EMID1
+  B9D2
+  TP53TG1
+  RPL35
+  COPRS
+  NOXA1
+  GTF3C6
+  FAM96B
+  RPP38
+  LRPAP1
+  SOX18
+  ATP6V0E2
+  AC113189_5
+  NDUFB6
+  POMC
+  NDUFA4
+  RPL18AP3
+  RANGRF
+  VPS51
+  PSMD8
+  PEMT
+  JSRP1
+  SCNM1
+  TMEM129
+  TMEM251
+  CCDC104
+  TSEN54
+  S100A13
+  CLIC1
+  C12orf10
+  HIRA
+  SPINK4
+  PHKG2
+  CLTB
+  MRPL21
+  AP001816_1
+  NDUFAF3
+  ZNF622
+  EGFL7
+  NCAPH2
+  RHOT2
+  CHID1
+  FKBP1B
+  CST3
+  PRDX5
+  CTD_3074O7_5
+  SERGEF
+  ILK
+  C1orf159
+  NDUFS4
+  ECH1
+  NFKBIB
+  DAPK3
+  TMEM134
+  TELO2
+  EIF4EBP1
+  NPEPL1
+  DDT
+  C12orf45
+  PRADC1
+  PRRX2
+  PSMA7
+  NFKBIL1
+  STK19
+  COX4I2
+  SIL1
+  AC004257_3
+  DUSP26
+  METTL5
+  TUSC1
+  JOSD2
+  CXCL17
+  ARFRP1
+  MLYCD
+  ETFB
+  CHCHD2
+  NPDC1
+  NARF
+  RP11_12M9_3
+  PSMB1
+  PRKCDBP
+  LENG1
+  TMEM238
+  DAD1
+  RABAC1
+  RAB13
+  SSR4
+  MIIP
+  KRT16
+  RAMP2
+  ETV2
+  OAZ3
+  GLTPD1
+  CFD
+  TSFM
+  UQCRQ
+  C16orf93
+  NOXO1
+  RIN1
+  TNFSF12
+  KRT18P28
+  MAP2K2
+  ALKBH4
+  DECR2
+  TLCD1
+  RP11_977G19_5
+  TNFRSF18
+  TMEM14B
+  NHP2
+  CDPF1
+  AC026806_2
+  PFDN4
+  LMAN2
+  METRN
+  IGFBP6
+  RP11_139H15_1
+  UQCRC1
+  SRRM3
+  CTA_29F11_1
+  RPS15
+  COX6C
+  ACP6
+  SPHK1
+  FIS1
+  RAB34
+  PRMT7
+  RBX1
+  EXOC3L1
+  COA3
+  SEPW1
+  SUV420H2
+  NDUFA12
+  RPS15A
+  WNT5B
+  SPSB2
+  WDR18
+  BOLA1
+  KTI12
+  ARMC5
+  SFT2D1
+  HSCB
+  GLRX5
+  PI16
+  POLR2E
+  FHL3
+  STX4
+  TRMT61A
+  ATP5J2
+  YIF1A
+  MDH2
+  CCDC137
+  THAP7
+  C9orf3
+  CAMTA1
+  HSD17B8
+  GNB1L
+  JAGN1
+  GAL
+  RBP1
+  PRDX4
+  ATOH8
+  RP11_395P17_11
+  SMIM12
+  PTP4A3
+  NDUFA2
+  RPS24P8
+  ATP5J
+  RUVBL2
+  RP11_112J1_1
+  RNF181
+  SURF1
+  CCR10
+  SNHG11
+  HOXB_AS3
+  G6PC3
+  WASH7P
+  TST
+  SEC61G
+  KIF9
+  DPCD
+  CD151
+  KCNE2
+  PPP2R3B
+  TPSB2
+  LY6E
+  SHC2
+  RP9P
+  MMAB
+  UQCRFS1
+  MRPL24
+  FAM3A
+  SNRPE
+  MPND
+  PART1
+  C14orf79
+  ZNF688
+  TBXA2R
+  RP11_178G16_4
+  SMIM7
+  IFT43
+  ATP5O
+  CTD_3064M3_3
+  TMEM54
+  GTF3C5
+  ECSIT
+  SCARF2
+  DDRGK1
+  NOL12
+  MRPS17
+  B9D1
+  IFT172
+  FDXR
+  CTD_2037K23_2
+  RP11_1398P2_1
+  LGALS1
+  NAPRT1
+  ZBTB8OS
+  C21orf119
+  POLE4
+  TMEM141
+  TIMM23
+  PPIB
+  TMEM255B
+  RAB32
+  SNHG10
+  RDH14
+  ARL16
+  RP11_111M22_3
+  HYAL2
+  ZNF296
+  CHRDL2
+  IDH3G
+  SNRNP70
+  HP
+  CNPY2
+  ALKBH3
+  MTND1P23
+  CYC1
+  LIN7B
+  PSMD4
+  SHD
+  THOC6
+  TMEM186
+  ODF3B
+  ATAD3A
+  TEX264
+  NDUFV1
+  THY1
+  WDR34
+  C1R
+  RP6_109B7_3
+  PDLIM4
+  PPP1R14A
+  PHGR1
+  PCOLCE
+  PRPH
+  TAX1BP3
+  DUSP27
+  RP11_23P13_7
+  CPA5
+  UBXN11
+  MRPL34
+  HN1
+  ILF3_AS1
+  COX7C
+  RHBDD2
+  ADCK5
+  PPAP2C
+  IGHA2
+  BATF3
+  TPD52L1
+  BMS1P8
+  GMDS
+  ATAD3C
+  DHRS7B
+  PSMG4
+  LOXL1
+  RP11_303E16_2
+  RP11_536O18_1
+  TMEM91
+  IGHG1
+  AC013394_2
+  IGLV1_36
+  EDF1
+  FSTL3
+  UBXN1
+  HAS1
+  CTD_3184A7_4
+  TP53I13
+  RP3_508I15_21
+  WASH3P
+  RPP25
+  GSTZ1
+  TMEM208
+  RAB26
+  TRAPPC6A
+  ART3
+  COX7A1
+  AC016739_2
+  IGLC6
+  RILP
+  LMF1
+  CTD_2186M15_3
+  IGFBP2
+  MIR4426
+  CDK5RAP3
+  GMPR
+  RP11_680H20_1
+  EVA1C
+  AGT
+  RPL24P8
+  GPAA1
+  ASCL2
+  DDX49
+  ATP5G1
+  P4HTM
+  AC103563_2
+  MADCAM1
+  PODNL1
+  COL18A1
+  CTD_2270L9_4
+  RPL13P12
+  HEXDC
+  TMEM88
+  F2RL3
+  RNASE2
+  POLR2H
+  HOXD10
+  CHMP4B
+  NNMT
+  VPS28
+  SNHG17
+  EBP
+  PLA2G10
+  MUC20
+  TRMU
+  DHRSX
+  BCAP31
+  NDUFA4L2
+  ABHD11
+  CTA_14H9_5
+  UBE2F
+  RP11_10K16_1
+  RP11_532F12_5
+  KLHDC4
+  STAP2
+  HIGD1B
+  IQCD
+  TPSAB1
+  WNT10B
+  IFITM10
+  HTRA3
+  CTD_2267D19_2
+  KLK6
+  SGCA
+  RP11_262H14_3
+  SURF2
+  EFCC1
+  KRT6A
+  MACROD1
+  CD177P1
+  RP11_140K17_3
+  RP11_1094M14_11
+  KCNN4
+  IGKV1D_13
+  HOTAIRM1
+  COX6A1P2
+  CTD_2008A1_2
+  OVOL2
+  CD99
+  RP5_1085F17_3
+  TPSD1
+  RBP7
+  BAIAP3
+  CDX2
+  IGHV3_43
+  NDN
+  RP5_1125A11_1
+  TECR
+  PCBP3
+  EMC9
+  CBLC
+  DHRS4L2
+  H3F3BP1
+  RP11_262H14_4
+  AP006621_5
+  ESM1
+  RP11_977G19_11
+  SOD1
+  XXbac_B135H6_15
+  CTSG
+  P2RX4
+  CAPS
+  ENTPD3_AS1
+  COQ4
+  RCN3
+  SLC11A1
+  RP11_496I9_1
+  RP5_882C2_2
+  GPR4
+  SH2D6
+  RP5_894A10_2
+  CTD_3094K11_1
+  hsa_mir_6723
+  TMEM105
+  SPTBN5
+  CDK10
+  SPATA24
+  KLF15
+  ZFAND2B
+  CTA_293F17_1
+  SPIRE2
+  NKD2
+  CKLF
+  GAP43
+  MMP7
+  FAM86FP
+  RP11_33O4_1
+  SPRR1B
+  RP11_69E11_4
+  MPST
+  TMED6
+  RP11_475J5_4
+  SRI
+  DEFB1
+  KLHDC7A
+  VWC2
+  CTB_61M7_2
+  IGHV7_27
+  CALB2
+  A4GNT
+  CMA1
+
+=== Cluster 2 ===
+Metabolomics (10):
+  HILp_QI1144
+  C18n_QI14
+  C8p_QI49
+  C18n_QI86
+  HILp_QI1756
+  HILp_TF37
+  HILn_QI73
+  HILp_TF40
+  C18n_QI26
+  C18n_QI07
+Transcriptomics (887):
+  SENP6
+  PUM2
+  TRAPPC11
+  AHCTF1
+  PPP6R3
+  SETD2
+  DHX40
+  PAPOLA
+  PAPD4
+  CNOT4
+  FBXO11
+  USP25
+  ZNF148
+  ELF2
+  ZNF510
+  IKZF5
+  ZFR
+  USP47
+  ZNF33A
+  ZNF24
+  PCM1
+  RPRD2
+  PPIG
+  PDS5B
+  AKAP10
+  ATP6V1C1
+  THOC2
+  SPAST
+  WHSC1L1
+  ZNF180
+  ZMYND11
+  FBXW2
+  SP3
+  SMEK1
+  DCAF7
+  TUG1
+  ADNP
+  TPR
+  CNOT7
+  SMEK2
+  DPP8
+  PIK3C3
+  FAM175B
+  FBXW11
+  ZNF197
+  CGGBP1
+  USP37
+  GAPVD1
+  WAC
+  ANKIB1
+  RSF1
+  ATXN1L
+  CASP8AP2
+  CREBL2
+  RALGAPB
+  HS2ST1
+  PTEN
+  STAG2
+  ZNF461
+  ZNF845
+  ZZZ3
+  BIRC2
+  SACM1L
+  CSDE1
+  CAPN7
+  FEM1B
+  YY1
+  ZNF397
+  TTC37
+  TROVE2
+  SPIN1
+  VPS41
+  RPAP2
+  KIAA0947
+  ABHD13
+  API5
+  MLLT10
+  CUL2
+  KDM3B
+  ROCK1
+  CNOT6
+  UBR1
+  USP33
+  ARID4A
+  TAF1
+  UFL1
+  SEC24B
+  SIRT1
+  FGD5_AS1
+  HEATR5B
+  ZNF790
+  NXT2
+  RBBP6
+  UBE3A
+  CNOT1
+  BTRC
+  TAB2
+  SUV420H1
+  GON4L
+  USP8
+  CREB1
+  REV1
+  PCNXL4
+  GPALPP1
+  ZNF12
+  ZNF280D
+  ZNF638
+  ZNF160
+  ARIH1
+  ZBTB34
+  PDS5A
+  SNRNP200
+  PRPF8
+  RNF169
+  KAT6B
+  DCUN1D1
+  BRWD1
+  BAZ1B
+  ZNF106
+  RBAK
+  RNF13
+  EFCAB14
+  EPC2
+  GSK3B
+  PIK3CA
+  DNAJC21
+  GABPA
+  ZNF708
+  NAA30
+  ZC3H13
+  FBXO21
+  SENP2
+  SNAPC3
+  ZNF558
+  CDC73
+  LANCL1
+  LATS1
+  COPS2
+  MAP3K4
+  SPOPL
+  RTF1
+  GIGYF2
+  CAND1
+  YLPM1
+  DCAF10
+  SF3B1
+  PTPN4
+  RSBN1
+  TLK1
+  VEZF1
+  NEK7
+  ZCCHC8
+  TNKS
+  PAN3
+  CTDSPL2
+  FAM179B
+  ATMIN
+  ANKRD17
+  FBXO3
+  ZNF260
+  LMBR1
+  ZNF776
+  ZNF615
+  CCNY
+  USP34
+  WDR7
+  DENND6A
+  CEP57
+  GRPEL2
+  COMMD2
+  DR1
+  UBE4B
+  KPNA1
+  ZNF780A
+  TOPORS
+  KLHL2
+  KDM4C
+  DYM
+  ZNF451
+  EML4
+  CD46
+  TOP2B
+  CIAO1
+  ZNF765
+  CUL5
+  HP1BP3
+  IPO8
+  CEP104
+  FRS2
+  KIAA2026
+  INIP
+  GPBP1L1
+  PHF3
+  NFXL1
+  MATR3
+  NSD1
+  TRAPPC10
+  U2SURP
+  AIDA
+  RAP1A
+  POLR3A
+  YTHDC2
+  ADAM10
+  ZNF45
+  DDX46
+  MKLN1
+  KAT7
+  PI4KA
+  KIAA0368
+  SLU7
+  POC1B
+  DCTN4
+  ZC3H11A
+  ZFP91
+  FOXJ3
+  KIAA1033
+  FBXL4
+  FMR1
+  C17orf80
+  NCOA6
+  ZFAND1
+  CCDC91
+  IREB2
+  VAMP4
+  SMAD4
+  CENPC
+  ZNF441
+  KIAA0100
+  PRPF4B
+  KIAA0196
+  RPS6KC1
+  MARCH7
+  ZNF252P
+  TNPO1
+  DDI2
+  ERCC6L2
+  ZNF609
+  ASH1L
+  NMD3
+  GIN1
+  CUL4B
+  GS1_251I9_4
+  ZNF420
+  PHF20L1
+  TADA1
+  ZRANB1
+  KIAA1143
+  PPP3CB
+  NEMF
+  PCNP
+  AZI2
+  KIAA0430
+  ITCH
+  ZNF639
+  ZBTB11
+  PTK2
+  MIA3
+  ZNF37A
+  LRIG2
+  GPBP1
+  CEP192
+  GALNT1
+  MLH3
+  TRPM7
+  INO80
+  DYNLL2
+  POLK
+  TRAPPC8
+  ZBTB44
+  ZMYM2
+  ORC3
+  TSC1
+  BAG4
+  LINC00674
+  RBM18
+  C17orf85
+  HAUS3
+  CAMK2D
+  ZNF271
+  CCDC93
+  COL4A3BP
+  PPP1R2
+  FXR1
+  RBBP9
+  SLTM
+  DDX42
+  SMC3
+  GTPBP8
+  PCMTD1
+  NFX1
+  CEP44
+  LARP4B
+  ZNF561
+  CNOT2
+  SECISBP2L
+  AGO3
+  OIP5_AS1
+  USP7
+  ARHGEF12
+  COBLL1
+  FAM133B
+  RC3H1
+  ZNF235
+  TAPT1
+  CLPX
+  BTBD1
+  FOXJ2
+  RLF
+  ARMC1
+  MAPK9
+  KLHL7
+  SMARCC1
+  ZNF432
+  C11orf57
+  TMEM209
+  KIAA2018
+  ZNF225
+  ARMC8
+  WDR48
+  UBR5
+  ZNF566
+  RBL2
+  GXYLT1
+  HSDL1
+  KLHL28
+  ZNF302
+  AF127936_7
+  LONP2
+  ASH2L
+  FAM172A
+  PPP1R12A
+  NBPF9
+  SMAD2
+  RBM41
+  APPBP2
+  ZNF829
+  ZNF700
+  CTDSP2
+  UBXN2B
+  NCKAP1
+  RANBP9
+  RNF14
+  IMPACT
+  VPS13B
+  ZNF761
+  ABCB7
+  NUDT3
+  GOLGA7
+  KANSL3
+  PRPF40A
+  DCAF16
+  RAD50
+  SENP5
+  PALB2
+  VPS36
+  PUM1
+  OSBPL9
+  KIDINS220
+  RP11_473I1_10
+  RAD17
+  FAM168B
+  PRDM4
+  ZNF470
+  STXBP3
+  TAB3
+  UTP14C
+  UBN1
+  UBE3C
+  ZFP62
+  ATF1
+  RIF1
+  LZIC
+  POGK
+  MKRN2
+  C4orf29
+  ZNF181
+  RASA1
+  LARP1
+  C6orf89
+  FBXO30
+  UBQLN2
+  ZNF33B
+  FBXL3
+  LRRC58
+  ATAD2B
+  TP53BP2
+  ANKRD12
+  SENP7
+  PTBP3
+  RPRD1A
+  ALMS1
+  ZNF436
+  ZNF605
+  ZNF398
+  VPS54
+  PRKRIR
+  REV3L
+  MFAP3
+  C5orf51
+  POGZ
+  SECISBP2
+  USP12
+  ATXN7
+  RABGAP1L
+  SYNJ1
+  PLEKHA3
+  RCOR3
+  KBTBD2
+  ZNF383
+  MCMBP
+  CSNK2A1
+  BRAP
+  HIPK3
+  MED13L
+  MTDH
+  ZBTB43
+  OSBPL8
+  DEK
+  AREL1
+  SLC35E1
+  CPNE3
+  DCAF8
+  UBE4A
+  CRBN
+  ZNF606
+  KLHL11
+  ZNF264
+  CLASP2
+  ZHX1
+  SLC38A9
+  ZNF805
+  RNF214
+  GDAP2
+  HERC2
+  ZNF568
+  TRMT11
+  VAMP7
+  PDPK1
+  MTMR3
+  RP11_819C21_1
+  ATL2
+  SNRNP48
+  PPP1R21
+  PPP1R3D
+  THAP5
+  DENND4C
+  SLC39A9
+  RP11_57H14_4
+  SHOC2
+  ARFGEF1
+  ZFC3H1
+  TMX4
+  MAN2A1
+  SCYL3
+  RAB21
+  PCGF5
+  BMPR1A
+  ESYT2
+  USP16
+  APPL1
+  FAM20B
+  SCRN3
+  RPA3_AS1
+  DDX1
+  SMIM13
+  PARD3B
+  MTOR
+  DCAF5
+  NCOA1
+  AP3M1
+  PIK3R1
+  ZNF304
+  RAB18
+  COG6
+  ANKRD52
+  PIK3CB
+  TAOK1
+  SLC35A5
+  ZNF345
+  IQCB1
+  PPP4R2
+  STAM2
+  AFF1
+  ZNF268
+  NHLRC2
+  ZNF616
+  KIAA1191
+  UBP1
+  MSL1
+  FUT10
+  ZBTB38
+  GGNBP2
+  NSRP1
+  SMG7
+  EIF4B
+  JRKL
+  PCMTD2
+  ABCB10
+  BTBD7
+  TMEM260
+  FAM149B1
+  SIK2
+  UBE2G1
+  HCFC2
+  ZFYVE20
+  BLOC1S5
+  UBR3
+  RCBTB1
+  XRN2
+  ZMYM6
+  ZDHHC20
+  PTPRK
+  NAA16
+  ZDHHC17
+  EVI5
+  ARHGAP12
+  VPS35
+  CASC3
+  GUF1
+  PLEKHA8
+  SLC25A36
+  GCLC
+  HERC3
+  ELP2
+  RBPJ
+  IFNAR1
+  SWT1
+  ZNF528
+  SSX2IP
+  FBXL5
+  LPAR1
+  ZFP1
+  ZNF169
+  TTC21B
+  ZNF569
+  NF1
+  REPS1
+  C10orf76
+  EAF1
+  CASK
+  ZNF354A
+  RP4_769N13_6
+  TMEM245
+  TUBGCP4
+  UBE2V2
+  NRIP1
+  RIOK2
+  BCLAF1
+  WASF2
+  C2orf69
+  AQR
+  ZXDC
+  RCOR1
+  GNPAT
+  EIF3A
+  PHKB
+  SNX4
+  FOXP2
+  ZNF473
+  MAP2K4
+  AC007390_5
+  CCNT2
+  ARPP19
+  ZXDB
+  PPP1CC
+  DNAJC13
+  NCOA2
+  RIT1
+  UBN2
+  EIF2A
+  CRNKL1
+  TOX4
+  ZC3H14
+  PCGF6
+  USP15
+  INADL
+  PSEN1
+  TET3
+  BRD7
+  CSPP1
+  AGTPBP1
+  SREK1
+  CCDC174
+  ARL8B
+  PIBF1
+  NUP133
+  FBXO48
+  SNX1
+  PEX1
+  NNT_AS1
+  ZNF443
+  CCNG1
+  HNRNPLL
+  EIF2AK2
+  ARNT
+  ASB8
+  GATC
+  CCNI
+  ATG14
+  GBE1
+  ORC4
+  ARL5A
+  PJA2
+  USP3
+  ARHGAP5
+  NANP
+  KLHL20
+  TTC17
+  ZNF350
+  GPAM
+  RCHY1
+  TIGD7
+  SOS1
+  CSNK2A2
+  FNIP1
+  ZNF75A
+  PDE4DIP
+  RAB22A
+  VTA1
+  TRIM4
+  LARP7
+  SCARB2
+  UBQLN1
+  KIAA1009
+  CTPS2
+  SLC25A46
+  DMXL2
+  THAP9
+  MAPK1
+  MEF2A
+  ZNF277
+  ZNF766
+  WBP4
+  CEBPZ
+  CEP290
+  KIAA1958
+  DDB1
+  RAB11FIP2
+  CDS2
+  ZFYVE9
+  TYW5
+  PPM1D
+  LIN52
+  MAP4K3
+  FANCC
+  SERINC3
+  UBL3
+  JMY
+  LIMS1
+  HNRNPH2
+  ZNF330
+  CHML
+  CHRAC1
+  NBPF12
+  RBMX
+  POLR2M
+  C10orf12
+  PPIL4
+  DENR
+  ZNF654
+  LRRC57
+  TMEM106B
+  HERPUD2
+  FPGT
+  RP11_849H4_2
+  ZNF44
+  GDI2
+  CGRRF1
+  PRDM10
+  ARL13B
+  SOS2
+  ANKS1A
+  MAN1A2
+  EFTUD1
+  TRDMT1
+  OSGIN2
+  C9orf41
+  TUBE1
+  SNX14
+  VPS37A
+  STAM
+  MARCH6
+  FAM91A1
+  MTRF1
+  ZNF608
+  BAG5
+  NIPA1
+  HECA
+  WWP1
+  PHLPP1
+  UBXN2A
+  SEC62
+  DYNC1H1
+  TMEM68
+  CEP57L1
+  ZNF799
+  ZNF43
+  FAM63B
+  SCAF4
+  SETD3
+  DNAJA2
+  RP11_67L2_2
+  ZNF137P
+  ATP6V1A
+  CPSF7
+  PICALM
+  EIF1AD
+  MID2
+  IL13RA1
+  TRMT2B
+  INO80D
+  ATG12
+  METTL9
+  TBCK
+  FBXL17
+  N4BP2L2
+  FAM228B
+  GOLGB1
+  ZNF224
+  TGOLN2
+  TRMT13
+  RMDN1
+  TAX1BP1
+  AGFG1
+  ATG2B
+  DPY19L3
+  DLG1
+  GLE1
+  ANKFY1
+  FYCO1
+  MORC2
+  MARK3
+  ASAH1
+  GPATCH2
+  C16orf72
+  FBXO9
+  LAMP2
+  CPD
+  YTHDF3
+  FSD1L
+  GTF2H2C
+  ATP5S
+  C1orf27
+  SIAH1
+  PLEKHA5
+  CHUK
+  ICMT
+  KIN
+  SAMD8
+  CDK6
+  PRPF39
+  TADA2A
+  GMCL1
+  BMPR2
+  PRDX3
+  PDIK1L
+  RAB3IP
+  RAF1
+  PTPRT
+  RRM2B
+  STK35
+  LTA4H
+  UPF3B
+  ATP8B4
+  CAPZA2
+  RPP14
+  RNF170
+  TBC1D15
+  ANKRD32
+  MBIP
+  MTMR10
+  OTUD3
+  RBM39
+  EIF5
+  TMEM64
+  AZIN1
+  FAM126B
+  MANEA
+  RBM33
+  ATP8A1
+  TMEM167B
+  LRBA
+  RB1CC1
+  GID4
+  ATF6
+  C2CD5
+  TRAF3IP1
+  CTC_297N7_8
+  SYDE2
+  TMEM181
+  LRRN1
+  AHCYL1
+  PBX1
+  RP11_242D8_1
+  MARCH5
+  DHX33
+  C16orf70
+  PPP3CC
+  INTS10
+  USP36
+  H2AFV
+  KDSR
+  GOLIM4
+  CUL4A
+  TBC1D8B
+  NCOR1
+  MBNL2
+  CNTLN
+  ABLIM1
+  DSP
+  AKAP9
+  CERS6
+  ZNF229
+  ATE1
+  ATF7
+  DLST
+  FAM110C
+  KIF13A
+  KIAA1109
+  DYNC2H1
+  PTPN9
+  DSCR3
+  MAP3K2
+  SNX25
+  LYRM5
+  KIF1B
+  VWA8
+  CREBRF
+  PTPN21
+  ZNF529
+  TEX2
+  GOLPH3
+  DPY19L4
+  ZNF195
+  CALCOCO2
+  PER2
+  ANKRD13C
+  FAM117B
+  BDNF_AS
+  RMND5A
+  BROX
+  PGAP1
+  ANKMY2
+  TJP2
+  PPP2R2A
+  ZNF248
+  TMEM69
+  RSPH3
+  PPFIA1
+  CTD_3099C6_9
+  TMEM161B
+  PPAPDC2
+  YAP1
+  SYT1
+  HACE1
+  SRSF11
+  ANAPC4
+  MYO6
+  LIN54
+  SAMD4A
+  MFSD8
+  DCBLD1
+  CREBZF
+  ZKSCAN1
+  ELMOD2
+  SUCLA2
+  SMNDC1
+  ZNF600
+  EXOC6
+  PPM1B
+  LINC00657
+  ACVR2B
+  RSRC2
+  UBE3B
+  ATXN2
+  UBR2
+  NAE1
+  ZNF250
+  FBXO33
+  RAB2B
+  LINC00488
+  EIF4ENIF1
+  CMYA5
+  TLK2
+  TMEM57
+  VAPB
+  RNF11
+
+=== Cluster 3 ===
+Metabolomics (9):
+  C8p_QI16
+  C8p_QI09
+  C8p_QI07
+  HILp_QI16955
+  HILp_TF17
+  C8p_QI36
+  HILp_QI14421
+  C8p_QI06
+  C8p_QI19
+Transcriptomics (45):
+  FCGR1A
+  SLAMF8
+  PLA2G7
+  KCNE1
+  CD300LF
+  GPR141
+  CYP27B1
+  SLC1A3
+  C3AR1
+  RP11_598F7_3
+  TLR8
+  PSTPIP2
+  ALOX15B
+  KCNJ10
+  SNX10
+  IGSF6
+  ASGR2
+  CXCL9
+  CCL17
+  HTRA4
+  DRAXIN
+  TRPM2
+  FADS1
+  FAM26F
+  HLA_DPA3
+  IL26
+  CLEC12A
+  RP11_10J5_1
+  IGLV5_37
+  IFNG
+  RP11_24F11_2
+  C1QB
+  SLC31A2
+  C1QA
+  RP11_212I21_2
+  CCR5
+  CCL1
+  SFRP2
+  LBP
+  VIP
+  CLLU1OS
+  GCH1
+  KRT6B
+  IGLV3_9
+  SAA1
+</pre>
+<p class="footer">
+<br>
+<a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023b</a>
+<br>
+</p>
+</div>
+<!--
+##### SOURCE BEGIN #####
+%% Dense Community Detection: CD vs UC vs nonIBD
+%
+% Identifies co-expression communities across three diagnostic groups:
+%   CD      — Crohn's Disease
+%   UC      — Ulcerative Colitis
+%   nonIBD  — healthy controls
+%
+% Input: CleanCorNonzero.mat
+%   R1, P1 — correlation matrices for CD group
+%   R2, P2 — correlation matrices for UC group
+%   R3, P3 — correlation matrices for nonIBD group
+%   name   — feature names (m transcriptomics + n metabolomics)
+%
+% Pipeline:
+% # Load pre-computed correlation matrices for all three groups
+% # Build combined P and R: max significance, max absolute correlation
+% # Construct bipartite weight matrix Wp, threshold at -log10(p) >= 2
+% # Greedy peeling to detect dense bipartite communities
+% # Refine Cluster 2 by re-peeling its X side
+% # Sort and visualise results
+% # Report per-cluster mean correlation across CD, UC, nonIBD
+
+%% Setup
+addpath('../../methods')
+addpath('../../visualization')
+
+set(0, 'DefaultAxesFontSize', 18);
+set(0, 'DefaultTextFontSize', 18);
+set(0, 'DefaultAxesColor', 'white');
+set(0, 'DefaultFigureColor', 'white');
+
+%% Load Correlation Matrices
+% R1/P1 = CD, R2/P2 = UC, R3/P3 = nonIBD
+% m = 17026 transcriptomics features (X), n = 476 metabolomics features (Y)
+
+W = readtable('IBDdata.csv');
+name = W.Properties.VariableNames;
+
+m = 17026;
+n = 476;
+
+%W1: CD, W2: UC, W3: Control
+W1 = W(strcmp(W.('diagnosis'), 'CD'), :);
+W1(:, end) = [];
+W2 = W(strcmp(W.('diagnosis'), 'UC'), :);
+W2(:, end) = [];
+W3 = W(strcmp(W.('diagnosis'), 'nonIBD'), :);
+W3(:, end) = [];
+
+T = table2array(W1);
+[R1, P1] = corr(T, 'Rows', 'pairwise'); 
+P1 = -log10(P1);
+T = table2array(W2);
+[R2, P2] = corr(T, 'Rows', 'pairwise'); 
+P2 = -log10(P2);
+T = table2array(W3);
+[R3, P3] = corr(T, 'Rows', 'pairwise'); 
+P3 = -log10(P3);
+
+%% Build Combined Correlation and Significance Matrices
+% P = element-wise max across all three groups — keeps strongest signal.
+% R = element-wise max by absolute value across CD, UC, nonIBD.
+P = max(max(P1, P2), P3);
+
+[~, idx] = max(cat(3, abs(R1), abs(R2), abs(R3)), [], 3);
+R = R1;
+R(idx == 2) = R2(idx == 2);
+R(idx == 3) = R3(idx == 3);
+
+%% Construct Bipartite Weight Matrix
+% Wp = P(X, Y) block, entries below -log10(0.01) = 2 zeroed out.
+Wp = P(1:m, (m+1):(m+n));
+Wp(Wp < 2) = 0;
+
+figure;
+imagesc(P((m+1):(m+n), 1:m)); colorbar; colormap(jet); caxis([0 10]);
+title('Bipartite significance matrix W_p  (Y \times X)');
+xlabel('X (transcriptomics)'); ylabel('Y (metabolomics)');
+
+%% Initial Community Detection: Greedy Peeling
+% Threshold 1.6 controls minimum subgraph density.
+result = greedy_peeling_XY_all(Wp, 1.6);
+result([3 4], :) = result([4 3], :);
+result(4, :) = {[]};
+
+%% Refine Cluster 2: Re-peel X Side
+idx_X = cat(1, result{2,1});
+X = R(idx_X, idx_X);
+X = (X + X') / 2;
+test = greedy_peeling_X_all(X, 1.9);
+test = sort_result(X, test);
+result{2,1} = idx_X(cat(2, test{:,1}));
+
+%% Sort and Finalise Clusters
+idx_X = 1:m;
+idx_Y = (m+1):(m+n);
+X  = R(idx_X, idx_X);
+Y  = R(idx_Y, idx_Y);
+XY = R(idx_X, idx_Y);
+result = sort_result_XandY(X, Y, result);
+result = result(:, [2 1]);
+
+n_clusters = sum(~cellfun(@isempty, result(:,1)));
+fprintf('Clusters detected: %d\n', n_clusters);
+
+%% Heatmaps: Combined Significance and Correlation
+plot_all_result(P(idx_Y, idx_X), result, false, true, [0 10]);
+
+%% 3-Panel Overview: Combined R (CD-dominant)
+plot3in1_v1(X, Y, XY, result, true, [200, 5], true);
+
+%% 3-Panel Overview: nonIBD Group (R3)
+X3  = R3(idx_X, idx_X);
+Y3  = R3(idx_Y, idx_Y);
+XY3 = R3(idx_X, idx_Y);
+plot3in1_v1(X3, Y3, XY3, result, true, [200, 5], true);
+
+%% Per-cluster Mean Correlation: CD vs UC vs nonIBD
+% Rows = result clusters, columns = [CD mean, UC mean, nonIBD mean].
+% Compares whether each community is specific to a diagnostic group.
+XY1 = R1(idx_X, idx_Y);
+XY2 = R2(idx_X, idx_Y);
+XY3 = R3(idx_X, idx_Y);
+
+fprintf('\n%-10s  %-12s  %-12s  %-12s  %-12s  %-12s\n', ...
+    'Cluster', 'X members', 'Y members', 'CD mean r', 'UC mean r', 'nonIBD mean r');
+fprintf('%s\n', repmat('-', 1, 74));
+
+for i = 1:n_clusters
+    rows = result{i, 1};   % metabolomics indices (Y, after column swap)
+    cols = result{i, 2};   % transcriptomics indices (X)
+    if ~isempty(rows) && ~isempty(cols)
+        sub1 = XY1(cols, rows);
+        sub2 = XY2(cols, rows);
+        sub3 = XY3(cols, rows);
+        fprintf('%-10d  %-12d  %-12d  %-12.4f  %-12.4f  %-12.4f\n', ...
+            i, numel(rows), numel(cols), ...
+            mean(sub1(:), 'omitnan'), mean(sub2(:), 'omitnan'), mean(sub3(:), 'omitnan'));
+    end
+end
+
+%% Detected Gene / Metabolite Lists
+result_named      = result;
+result_named(:,1) = cellfun(@(x) x + m, result(:,1), 'UniformOutput', false);
+NameList          = cellfun(@(ix) name(ix), result_named, 'UniformOutput', false);
+
+for i = 1:n_clusters
+    fprintf('\n=== Cluster %d ===\n', i);
+    fprintf('Metabolomics (%d):\n',    numel(NameList{i,1}));
+    fprintf('  %s\n', NameList{i,1}{:});
+    fprintf('Transcriptomics (%d):\n', numel(NameList{i,2}));
+    fprintf('  %s\n', NameList{i,2}{:});
+end
+
+##### SOURCE END #####
+-->
+</body>
+</html>
