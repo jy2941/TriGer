@@ -1,5 +1,6 @@
 # MATLAB
 *.mat
+!real_data/**/*.mat
 *.asv
 *.mex*
 
