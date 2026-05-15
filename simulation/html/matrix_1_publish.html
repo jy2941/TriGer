@@ -1,0 +1,357 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      -->
+<title>Simulation Study: TriGer Community Detection on Synthetic Data (Matrix 1)</title>
+<meta name="generator" content="MATLAB 23.2">
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/">
+<meta name="DC.date" content="2026-05-15">
+<meta name="DC.source" content="matrix_1_publish.m">
+<style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style>
+</head>
+<body>
+<div class="content">
+<h1>Simulation Study: TriGer Community Detection on Synthetic Data (Matrix 1)</h1>
+<!--introduction-->
+<p>PURPOSE Demonstrate that TriGer recovers planted bipartite communities from a shuffled sample correlation matrix, even when gene ordering is unknown.</p>
+<p>PLANTED STRUCTURE (defined in matrix_1_generate.m, saved in matrix_1.mat) Full matrix: 1000 variables &mdash; X (indices 1:450) and Y (indices 451:1000)</p>
+<pre class="language-matlab">Community <span class="string">1</span> <span class="string">(strong):</span>
+  X <span class="string">members</span> <span class="string">:</span> <span class="string">genes</span> <span class="string">1&ndash;40</span>    <span class="string">(40 genes)</span>, intra-correlation r = 0.5
+  Y <span class="string">members</span> <span class="string">:</span> <span class="string">genes</span> <span class="string">451&ndash;510</span> <span class="string">(60 genes)</span>, intra-correlation r = 0.5
+  Cross-corr: r = 0.3
+</pre>
+<pre class="language-matlab">Community <span class="string">2</span> <span class="string">(weaker):</span>
+  X <span class="string">members</span> <span class="string">:</span> <span class="string">genes</span> <span class="string">1&ndash;40</span>    <span class="string">(same 40 X genes as Community 1)</span>
+  Y <span class="string">members</span> <span class="string">:</span> <span class="string">genes</span> <span class="string">511&ndash;540</span> <span class="string">(30 genes)</span>, intra-correlation r = 0.5
+  Cross-corr: r = 0.2
+</pre>
+<p>WORKFLOW # Load population correlation matrix R # Sample 2000 observations from multivariate normal distribution # Compute sample correlation matrix from the 2000 observations # Shuffle gene order (simulate unknown ordering in real data) # Run TriGer (greedy_3step) on the shuffled matrix # Evaluate recovery and plot results</p>
+<!--/introduction-->
+<h2>Contents</h2>
+<div>
+<ul>
+<li>
+<a href="#1">Load Population Correlation Matrix</a>
+</li>
+<li>
+<a href="#2">Generate Sample Data from Population Distribution</a>
+</li>
+<li>
+<a href="#3">Shuffle Gene Order</a>
+</li>
+<li>
+<a href="#4">Apply Shuffle to Sample Correlation Matrix</a>
+</li>
+<li>
+<a href="#5">Run TriGer: Community Detection on Shuffled Matrix</a>
+</li>
+<li>
+<a href="#6">Post-process Detected Result</a>
+</li>
+<li>
+<a href="#7">Visualise Detected Communities</a>
+</li>
+</ul>
+</div>
+<h2 id="1">Load Population Correlation Matrix</h2>
+<p>matrix_1.mat contains: R &mdash; 1000x1000 population correlation matrix with planted communities m &mdash; 450 (number of X-type variables) n &mdash; 550 (number of Y-type variables) size &mdash; 1000 (total variables = m + n)</p>
+<pre class="codeinput">load(<span class="string">'matrix_1.mat'</span>)
+</pre>
+<h2 id="2">Generate Sample Data from Population Distribution</h2>
+<p>Draw 2000 observations from a multivariate normal with mean=0, covariance=R. This simulates a real omics dataset where R is the unknown true structure.</p>
+<pre class="codeinput">mu   = zeros(1, size);
+data = mvnrnd(mu, R, 2000);
+
+<span class="comment">% Compute sample Pearson correlation and p-values from the simulated data.</span>
+<span class="comment">% This is what TriGer receives &mdash; the true R above is never used directly.</span>
+[sample_R, sample_P] = corr(data, <span class="string">'Rows'</span>, <span class="string">'pairwise'</span>);
+
+<span class="comment">% Visualise the raw data matrix (samples x variables)</span>
+figure; imagesc(data); colorbar; colormap(jet(256));
+title(<span class="string">'Simulated data matrix (2000 samples \times 1000 variables)'</span>);
+xlabel(<span class="string">'Variable index'</span>); ylabel(<span class="string">'Sample index'</span>);
+</pre>
+<img vspace="5" hspace="5" src="matrix_1_publish_01.png" alt=""> <h2 id="3">Shuffle Gene Order</h2>
+<p>In real omics data the gene ordering is arbitrary and contains no information. We randomly permute X and Y indices independently to simulate this. TriGer must recover the community structure without knowing the true order.</p>
+<pre class="codeinput">shuffle_X_idx = randperm(450);           <span class="comment">% Random permutation of X indices (1:450)</span>
+[~, org_X_idx] = sort(shuffle_X_idx);   <span class="comment">% Inverse permutation &mdash; recovers original X order</span>
+
+shuffle_Y_idx = randperm(550) + 450;    <span class="comment">% Random permutation of Y indices (451:1000)</span>
+[~, org_Y_idx] = sort(shuffle_Y_idx);   <span class="comment">% Inverse permutation &mdash; recovers original Y order</span>
+
+<span class="comment">% Combined permutation index for the full 1000-variable matrix</span>
+shuffle_idx = [shuffle_X_idx, shuffle_Y_idx];
+org_idx     = [org_X_idx, org_Y_idx + 450];
+</pre>
+<h2 id="4">Apply Shuffle to Sample Correlation Matrix</h2>
+<p>Zero out the diagonal before shuffling &mdash; self-correlation is uninformative.</p>
+<pre class="codeinput">sample_R(1:size+1:end) = 0;
+
+<span class="comment">% Reorder rows and columns by the shuffled index.</span>
+<span class="comment">% This produces a matrix where community structure is hidden.</span>
+shuffle_R = sample_R(shuffle_idx, shuffle_idx);
+shuffle_P = sample_P(shuffle_idx, shuffle_idx);
+shuffle_P = -log10(shuffle_P);   <span class="comment">% Convert p-values to -log10 scale</span>
+
+<span class="comment">% Plot shuffled matrix &mdash; communities are no longer visible as blocks.</span>
+<span class="comment">% The red lines mark the boundary between X (rows/cols 1:450) and Y (451:1000).</span>
+figure; imagesc(shuffle_R); colorbar; colormap(jet(256)); caxis([-0.2, 1]);
+ax = gca; ax.FontSize = 18;
+title(<span class="string">'Shuffled sample correlation matrix'</span>);
+hold <span class="string">on</span>;
+line([0 1000], [450 450], <span class="string">'Color'</span>, <span class="string">'r'</span>, <span class="string">'LineWidth'</span>, 2);  <span class="comment">% X-Y boundary (row)</span>
+line([450 450], [0 1000], <span class="string">'Color'</span>, <span class="string">'r'</span>, <span class="string">'LineWidth'</span>, 2);  <span class="comment">% X-Y boundary (col)</span>
+hold <span class="string">off</span>;
+
+<span class="comment">% Plot X-X and Y-Y blocks separately for reference</span>
+figure; imagesc(shuffle_R(1:450, 1:450));
+colorbar; colormap(jet(256)); caxis([-0.2, 1]); ax = gca; ax.FontSize = 18;
+title(<span class="string">'X-X block (shuffled)'</span>);
+
+figure; imagesc(shuffle_R(451:1000, 451:1000));
+colorbar; colormap(jet(256)); caxis([-0.2, 1]); ax = gca; ax.FontSize = 18;
+title(<span class="string">'Y-Y block (shuffled)'</span>);
+</pre>
+<img vspace="5" hspace="5" src="matrix_1_publish_02.png" alt=""> <img vspace="5" hspace="5" src="matrix_1_publish_03.png" alt=""> <img vspace="5" hspace="5" src="matrix_1_publish_04.png" alt=""> <h2 id="5">Run TriGer: Community Detection on Shuffled Matrix</h2>
+<p>greedy_3step simultaneously analyses the X-X, Y-Y, and X-Y blocks. Parameters: lambda_XY=1, lambda_X=1.8, lambda_Y=1.8 size constraints: X in [10,50], Y in [10,50]</p>
+<pre class="codeinput">figure; imagesc(shuffle_R); colorbar; colormap(jet(256)); caxis([-0.2, 1]);
+ax = gca; ax.FontSize = 18;
+title(<span class="string">'Input to TriGer (shuffled R)'</span>);
+
+result = greedy_3step(shuffle_R, shuffle_R, m, n, 1, 1.8, 1.8, [10, 50], [10, 50]);
+</pre>
+<pre class="codeoutput">Round 1
+******************
+Round 2
+******************
+Round 1
+******************
+Round 2
+******************
+Round 3
+******************
+</pre>
+<img vspace="5" hspace="5" src="matrix_1_publish_05.png" alt=""> <h2 id="6">Post-process Detected Result</h2>
+<p>result{1,2} currently contains Y indices in the full 1:1000 space. Subtract 450 to convert to Y-local indices (1:550).</p>
+<pre class="codeinput">result{1, 2} = result{1, 2} - 450;
+
+<span class="comment">% Define a complement cluster: all X and Y genes NOT in the detected community.</span>
+<span class="comment">% This serves as the background group for visualisation.</span>
+result{2, 1} = setdiff(1:450, result{1, 1});
+result{2, 2} = setdiff(1:550, result{1, 2});
+result(end+1, :) = {[], []};   <span class="comment">% Terminating empty row required by plot functions</span>
+</pre>
+<h2 id="7">Visualise Detected Communities</h2>
+<p>plot3in1_v1 shows three panels: Y-Y, X-X, and Y-X blocks, with rows/columns reordered so detected communities appear as visible blocks.</p>
+<pre class="codeinput">
+<span class="comment">% Using significance matrix (-log10 p): highlights statistically significant pairs</span>
+plot3in1_v1(shuffle_P(451:1000, 451:1000), shuffle_P(1:450, 1:450), <span class="keyword">...</span>
+            shuffle_P(451:1000, 1:450), result, true, [200, 100], true);
+
+<span class="comment">% Using correlation matrix: shows the magnitude of co-expression within communities</span>
+plot3in1_v1(shuffle_R(451:1000, 451:1000), shuffle_R(1:450, 1:450), <span class="keyword">...</span>
+            shuffle_R(451:1000, 1:450), result, true, [200, 100], true);
+</pre>
+<img vspace="5" hspace="5" src="matrix_1_publish_06.png" alt=""> <img vspace="5" hspace="5" src="matrix_1_publish_07.png" alt=""> <p class="footer">
+<br>
+<a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023b</a>
+<br>
+</p>
+</div>
+<!--
+##### SOURCE BEGIN #####
+%% Simulation Study: TriGer Community Detection on Synthetic Data (Matrix 1)
+%
+% PURPOSE
+%   Demonstrate that TriGer recovers planted bipartite communities from
+%   a shuffled sample correlation matrix, even when gene ordering is unknown.
+%
+% PLANTED STRUCTURE (defined in matrix_1_generate.m, saved in matrix_1.mat)
+%   Full matrix: 1000 variables — X (indices 1:450) and Y (indices 451:1000)
+%
+%   Community 1 (strong):
+%     X members : genes 1–40    (40 genes), intra-correlation r = 0.5
+%     Y members : genes 451–510 (60 genes), intra-correlation r = 0.5
+%     Cross-corr: r = 0.3
+%
+%   Community 2 (weaker):
+%     X members : genes 1–40    (same 40 X genes as Community 1)
+%     Y members : genes 511–540 (30 genes), intra-correlation r = 0.5
+%     Cross-corr: r = 0.2
+%
+% WORKFLOW
+%   # Load population correlation matrix R
+%   # Sample 2000 observations from multivariate normal distribution
+%   # Compute sample correlation matrix from the 2000 observations
+%   # Shuffle gene order (simulate unknown ordering in real data)
+%   # Run TriGer (greedy_3step) on the shuffled matrix
+%   # Evaluate recovery and plot results
+
+%% Load Population Correlation Matrix
+% matrix_1.mat contains:
+%   R    — 1000x1000 population correlation matrix with planted communities
+%   m    — 450 (number of X-type variables)
+%   n    — 550 (number of Y-type variables)
+%   size — 1000 (total variables = m + n)
+load('matrix_1.mat')
+
+%% Generate Sample Data from Population Distribution
+% Draw 2000 observations from a multivariate normal with mean=0, covariance=R.
+% This simulates a real omics dataset where R is the unknown true structure.
+mu   = zeros(1, size);
+data = mvnrnd(mu, R, 2000);
+
+% Compute sample Pearson correlation and p-values from the simulated data.
+% This is what TriGer receives — the true R above is never used directly.
+[sample_R, sample_P] = corr(data, 'Rows', 'pairwise');
+
+% Visualise the raw data matrix (samples x variables)
+figure; imagesc(data); colorbar; colormap(jet(256));
+title('Simulated data matrix (2000 samples \times 1000 variables)');
+xlabel('Variable index'); ylabel('Sample index');
+
+%% Shuffle Gene Order
+% In real omics data the gene ordering is arbitrary and contains no information.
+% We randomly permute X and Y indices independently to simulate this.
+% TriGer must recover the community structure without knowing the true order.
+shuffle_X_idx = randperm(450);           % Random permutation of X indices (1:450)
+[~, org_X_idx] = sort(shuffle_X_idx);   % Inverse permutation — recovers original X order
+
+shuffle_Y_idx = randperm(550) + 450;    % Random permutation of Y indices (451:1000)
+[~, org_Y_idx] = sort(shuffle_Y_idx);   % Inverse permutation — recovers original Y order
+
+% Combined permutation index for the full 1000-variable matrix
+shuffle_idx = [shuffle_X_idx, shuffle_Y_idx];
+org_idx     = [org_X_idx, org_Y_idx + 450];
+
+%% Apply Shuffle to Sample Correlation Matrix
+% Zero out the diagonal before shuffling — self-correlation is uninformative.
+sample_R(1:size+1:end) = 0;
+
+% Reorder rows and columns by the shuffled index.
+% This produces a matrix where community structure is hidden.
+shuffle_R = sample_R(shuffle_idx, shuffle_idx);
+shuffle_P = sample_P(shuffle_idx, shuffle_idx);
+shuffle_P = -log10(shuffle_P);   % Convert p-values to -log10 scale
+
+% Plot shuffled matrix — communities are no longer visible as blocks.
+% The red lines mark the boundary between X (rows/cols 1:450) and Y (451:1000).
+figure; imagesc(shuffle_R); colorbar; colormap(jet(256)); caxis([-0.2, 1]);
+ax = gca; ax.FontSize = 18;
+title('Shuffled sample correlation matrix');
+hold on;
+line([0 1000], [450 450], 'Color', 'r', 'LineWidth', 2);  % X-Y boundary (row)
+line([450 450], [0 1000], 'Color', 'r', 'LineWidth', 2);  % X-Y boundary (col)
+hold off;
+
+% Plot X-X and Y-Y blocks separately for reference
+figure; imagesc(shuffle_R(1:450, 1:450));
+colorbar; colormap(jet(256)); caxis([-0.2, 1]); ax = gca; ax.FontSize = 18;
+title('X-X block (shuffled)');
+
+figure; imagesc(shuffle_R(451:1000, 451:1000));
+colorbar; colormap(jet(256)); caxis([-0.2, 1]); ax = gca; ax.FontSize = 18;
+title('Y-Y block (shuffled)');
+
+%% Run TriGer: Community Detection on Shuffled Matrix
+% greedy_3step simultaneously analyses the X-X, Y-Y, and X-Y blocks.
+% Parameters: lambda_XY=1, lambda_X=1.8, lambda_Y=1.8
+%             size constraints: X in [10,50], Y in [10,50]
+figure; imagesc(shuffle_R); colorbar; colormap(jet(256)); caxis([-0.2, 1]);
+ax = gca; ax.FontSize = 18;
+title('Input to TriGer (shuffled R)');
+
+result = greedy_3step(shuffle_R, shuffle_R, m, n, 1, 1.8, 1.8, [10, 50], [10, 50]);
+
+%% Post-process Detected Result
+% result{1,2} currently contains Y indices in the full 1:1000 space.
+% Subtract 450 to convert to Y-local indices (1:550).
+result{1, 2} = result{1, 2} - 450;
+
+% Define a complement cluster: all X and Y genes NOT in the detected community.
+% This serves as the background group for visualisation.
+result{2, 1} = setdiff(1:450, result{1, 1});
+result{2, 2} = setdiff(1:550, result{1, 2});
+result(end+1, :) = {[], []};   % Terminating empty row required by plot functions
+
+%% Visualise Detected Communities
+% plot3in1_v1 shows three panels: Y-Y, X-X, and Y-X blocks,
+% with rows/columns reordered so detected communities appear as visible blocks.
+
+% Using significance matrix (-log10 p): highlights statistically significant pairs
+plot3in1_v1(shuffle_P(451:1000, 451:1000), shuffle_P(1:450, 1:450), ...
+            shuffle_P(451:1000, 1:450), result, true, [200, 100], true);
+
+% Using correlation matrix: shows the magnitude of co-expression within communities
+plot3in1_v1(shuffle_R(451:1000, 451:1000), shuffle_R(1:450, 1:450), ...
+            shuffle_R(451:1000, 1:450), result, true, [200, 100], true);
+
+##### SOURCE END #####
+-->
+</body>
+</html>
