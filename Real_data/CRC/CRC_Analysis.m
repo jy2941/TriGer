@@ -1,7 +1,7 @@
 %% Dense Community Detection in Multi-omics Data (Dataset 2)
 %
 % This script reproduces all figures and results for Dataset 2.
-% Input: CleanCorNonzero.mat — pre-computed correlation matrices
+% Input: CRC_correlation_matrix.mat — pre-computed correlation matrices
 % (Pearson r and -log10 p-value for Treatment and Control groups).
 % No raw expression data is used.
 %
@@ -24,18 +24,18 @@ set(0, 'DefaultAxesColor', 'white');
 set(0, 'DefaultFigureColor', 'white');
 
 %% Load Correlation Matrices
-% CleanCorNonzero.mat contains four pre-computed matrices (single precision):
+% CRC_correlation_matrix.mat contains four pre-computed matrices (single precision):
 %   R_Treat, R_Control  — Pearson correlation coefficients
 %   P_Treat, P_Control  — significance as -log10(p-value)
 %   name                — cell array of gene/feature names (1 x 1428)
 %
 % Dimensions: 341 X-features (rows 1:341) and 1087 Y-features (rows 342:1428).
-load('CleanCorNonzero.mat');
+load('CRC_correlation_matrix.mat');
 
 m = 341;
 n = 1087;
 
-fprintf('Loaded CleanCorNonzero.mat\n');
+fprintf('Loaded CRC_correlation_matrix.mat\n');
 fprintf('  X features : %d\n', m);
 fprintf('  Y features : %d\n', n);
 fprintf('  Matrix size: %d x %d\n', m+n, m+n);
