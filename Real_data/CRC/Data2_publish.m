@@ -15,8 +15,8 @@
 % # Split and reorder clusters, generate heatmaps and summary statistics
 
 %% Setup
-addpath('methods')
-addpath('visualization')
+addpath('../../methods')
+addpath('../../visualization')
 
 set(0, 'DefaultAxesFontSize', 18);
 set(0, 'DefaultTextFontSize', 18);
@@ -30,7 +30,7 @@ set(0, 'DefaultFigureColor', 'white');
 %   name                — cell array of gene/feature names (1 x 1428)
 %
 % Dimensions: 341 X-features (rows 1:341) and 1087 Y-features (rows 342:1428).
-load('Real_data/CRC/CleanCorNonzero.mat');
+load('CleanCorNonzero.mat');
 
 m = 341;
 n = 1087;
