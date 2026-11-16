@@ -15,8 +15,11 @@ Community size is controlled by a penalty parameter λ ∈ [1, 2]: higher values
 
 ```
 TriGer/
-├── methods/          # Core detection and sorting algorithms
-├── visualization/    # Plotting functions for results
+├── matlab/
+│   ├── methods/      # Core detection and sorting algorithms
+│   └── visualization/ # Plotting functions for results
+├── python/
+│   └── triger/       # Python versions of the methods and plotting functions
 ├── simulation/       # Simulation scripts for benchmarking and validation
 └── Real_data/        # Real data analysis scripts and correlation matrices
     ├── CRC/          # Colorectal cancer (CRC) dataset
@@ -78,8 +81,8 @@ Scripts for generating synthetic data and benchmarking detection performance.
 
 ```matlab
 % Add both folders to MATLAB path
-addpath('methods/')
-addpath('visualization/')
+addpath('matlab/methods/')
+addpath('matlab/visualization/')
 
 % Detect dense communities from an X-Y association matrix
 % lambda controls community size penalty (typical range: 1.3–1.8)
