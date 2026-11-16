@@ -33,8 +33,8 @@
 %   n    — 550 (number of Y-type variables)
 %   size — 1000 (total variables = m + n)
 load('matrix_1.mat')
-addpath('../../CodeSummary/methods')
-addpath('../../CodeSummary/visualization/')
+addpath('../matlab/methods')
+addpath('../matlab/visualization')
 
 %% Generate Sample Data from Population Distribution
 % Draw 2000 observations from a multivariate normal with mean=0, covariance=R.

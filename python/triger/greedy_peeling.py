@@ -1,7 +1,7 @@
 """
 Python implementation of TriGer greedy peeling.
 
-Mirrors the MATLAB functions in this folder (greedy_peeling_XY_one/all,
+Mirrors the MATLAB functions in matlab/methods (greedy_peeling_XY_one/all,
 greedy_peeling_X_one/all, sort_result) and adds greedy_3step, the full
 cross-omics + within-omic refinement pipeline. All indices are 0-based.
 """

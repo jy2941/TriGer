@@ -1,4 +1,4 @@
-addpath('../../CodeSummary/methods')
+addpath('../matlab/methods')
 load('matrix_1.mat')
 
 nRuns  = 10;

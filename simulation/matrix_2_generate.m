@@ -1,5 +1,5 @@
 clear;
-addpath('../../../CodeSummary/methods')
+addpath('../matlab/methods')
 rng(24);
 
 % Define the size of the matrix, and generate element matrix

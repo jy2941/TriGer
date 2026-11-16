@@ -15,8 +15,8 @@
 % # Split and reorder clusters, generate heatmaps and summary statistics
 
 %% Setup
-addpath('../../methods')
-addpath('../../visualization')
+addpath('../../matlab/methods')
+addpath('../../matlab/visualization')
 
 set(0, 'DefaultAxesFontSize', 18);
 set(0, 'DefaultTextFontSize', 18);
