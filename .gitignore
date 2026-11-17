@@ -7,3 +7,5 @@
 # macOS
 .DS_Store
 Icon
+simulation/data/
+__pycache__/
