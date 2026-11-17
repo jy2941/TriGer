@@ -21,29 +21,28 @@ TriGer/
 │   └── visualization/    # MATLAB plotting functions
 ├── R/
 │   ├── methods/          # R implementation of the methods
-│   └── visualization/    # R plotting function
+│   └── visualization/    # R plotting functions
 ├── simulation/           # Simulation studies in the manuscript (Python + R)
 └── Real_data/            # Real-data analyses (MATLAB)
     ├── CRC/              # Colorectal cancer
     └── IBD/              # Inflammatory bowel disease
 ```
 
-The three implementations use the same function names and arguments.
+Python, MATLAB and R provide the same functions under the same names.
 
 ## Functions
 
-| Function | Description | Python | MATLAB | R |
-|----------|-------------|:------:|:------:|:-:|
-| `greedy_peeling_XY_one` | Extract one dense block from a cross-omics (X-Y) matrix | ✓ | ✓ | ✓ |
-| `greedy_peeling_XY_all` | Extract dense X-Y blocks repeatedly | ✓ | ✓ | ✓ |
-| `greedy_peeling_X_one` | Extract one dense community from a within-omics (symmetric) matrix | ✓ | ✓ | ✓ |
-| `greedy_peeling_X_all` | Extract within-omics communities repeatedly | ✓ | ✓ | ✓ |
-| `greedy_3step` | Full pipeline: X-Y block detection, then within-omics refinement of large blocks | ✓ | | ✓ |
-| `sort_result` | Order features within each block by their within-block sums | ✓ | ✓ | ✓ |
-| `sort_result_XandY` | Order features using the X-X and Y-Y matrices | | ✓ | |
-| `plot3in1_v1` | X-Y heatmap with X-X and Y-Y triangles (top / right) | ✓ | ✓ | ✓ |
-| `plot3in1_v2` | Same plot with the triangles bottom / left | | ✓ | |
-| `plot_all_result` | Heatmap of the detected blocks within the full or selected matrix | ✓ | ✓ | |
+| Function | Description |
+|----------|-------------|
+| `greedy_peeling_XY_one` | Extract one dense block from a cross-omics (X-Y) matrix |
+| `greedy_peeling_XY_all` | Extract dense X-Y blocks repeatedly |
+| `greedy_peeling_X_one` | Extract one dense community from a within-omics (symmetric) matrix |
+| `greedy_peeling_X_all` | Extract within-omics communities repeatedly |
+| `greedy_3step` | Full pipeline: X-Y block detection, then within-omics refinement of large blocks |
+| `sort_result` | Order features within each block by their within-block sums |
+| `sort_result_XandY` | Order features within each block using the X-X and Y-Y matrices |
+| `plot3in1_v1` | X-Y heatmap with the X-X and Y-Y matrices as triangles on the top and right |
+| `plot_all_result` | Heatmap of the detected blocks within the full or selected matrix |
 
 Indices are 0-based in Python and 1-based in MATLAB and R. `greedy_peeling_XY_all`
 returns at most `max_round` blocks in Python and `max_round - 1` in MATLAB and R.
@@ -77,7 +76,7 @@ plot3in1_v1(X, Y, XY, result, true);
 ### R
 
 ```r
-source("R/methods/greedy.R"); source("R/visualization/plot3in1_v1.R")
+source("R/methods/greedy.R"); source("R/visualization/plot3in1_v1.R"); source("R/visualization/plot_all_result.R")
 blocks <- sort_result(XY, greedy_peeling_XY_all(XY, 1.5))
 ```
 
