@@ -20,6 +20,9 @@ TriGer/
 │   └── visualization/ # Plotting functions for results
 ├── python/
 │   └── triger/       # Python versions of the methods and plotting functions
+├── R/
+│   ├── methods/      # R version of the methods (greedy.R)
+│   └── visualization/ # R version of plot3in1_v1
 ├── simulation/       # Simulation scripts for benchmarking and validation
 └── Real_data/        # Real data analysis scripts and correlation matrices
     ├── CRC/          # Colorectal cancer (CRC) dataset
