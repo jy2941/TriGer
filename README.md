@@ -72,13 +72,9 @@ TriGer/
 
 ## Simulation
 
-Scripts for generating synthetic data and benchmarking detection performance.
-
-| File | Description |
-|------|-------------|
-| `matrix_1_generate.m` | Generate synthetic correlation matrix with planted communities |
-| `matrix_1_TGI.m` | Run TriGer on simulated data and evaluate TPR/TNR across repeated samples |
-| `matrix_1_benmark.R` | R benchmark comparing TriGer against alternative methods |
+Simulation studies from the manuscript: the main nine-method comparison, signal
+strength and sample size, penalty sensitivity, and null datasets. See
+[`simulation/README.md`](simulation/README.md).
 
 ## Usage
 

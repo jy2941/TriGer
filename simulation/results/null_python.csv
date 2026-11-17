@@ -1,0 +1,301 @@
+setting,method,seed,nX,nY,tpX,tpY,nonempty
+null,TriGer,1,0,0,0,0,False
+null,Greedy 1-step,1,0,0,0,0,False
+null,BSP,1,0,0,0,0,False
+planted,TriGer,1,22,60,20,60,True
+planted,Greedy 1-step,1,34,60,20,60,True
+planted,BSP,1,36,60,20,60,True
+null,TriGer,2,0,0,0,0,False
+null,Greedy 1-step,2,0,0,0,0,False
+null,BSP,2,0,0,0,0,False
+planted,TriGer,2,20,60,20,60,True
+planted,Greedy 1-step,2,35,60,20,60,True
+planted,BSP,2,36,61,20,60,True
+null,TriGer,3,0,0,0,0,False
+null,Greedy 1-step,3,0,0,0,0,False
+null,BSP,3,0,0,0,0,False
+planted,TriGer,3,20,60,20,60,True
+planted,Greedy 1-step,3,33,60,20,60,True
+planted,BSP,3,36,60,20,60,True
+null,TriGer,4,0,0,0,0,False
+null,Greedy 1-step,4,0,0,0,0,False
+null,BSP,4,0,0,0,0,False
+planted,TriGer,4,19,60,19,60,True
+planted,Greedy 1-step,4,32,60,19,60,True
+planted,BSP,4,36,61,20,60,True
+null,TriGer,5,0,0,0,0,False
+null,Greedy 1-step,5,0,0,0,0,False
+null,BSP,5,0,0,0,0,False
+planted,TriGer,5,20,60,20,60,True
+planted,Greedy 1-step,5,32,60,20,60,True
+planted,BSP,5,38,60,20,60,True
+null,TriGer,6,0,0,0,0,False
+null,Greedy 1-step,6,0,0,0,0,False
+null,BSP,6,0,0,0,0,False
+planted,TriGer,6,21,60,18,60,True
+planted,Greedy 1-step,6,33,60,18,60,True
+planted,BSP,6,35,60,20,60,True
+null,TriGer,7,0,0,0,0,False
+null,Greedy 1-step,7,0,0,0,0,False
+null,BSP,7,0,0,0,0,False
+planted,TriGer,7,20,60,20,60,True
+planted,Greedy 1-step,7,35,60,20,60,True
+planted,BSP,7,37,60,20,60,True
+null,TriGer,8,0,0,0,0,False
+null,Greedy 1-step,8,0,0,0,0,False
+null,BSP,8,0,0,0,0,False
+planted,TriGer,8,17,60,15,60,True
+planted,Greedy 1-step,8,29,60,15,60,True
+planted,BSP,8,37,60,20,60,True
+null,TriGer,9,0,0,0,0,False
+null,Greedy 1-step,9,0,0,0,0,False
+null,BSP,9,0,0,0,0,False
+planted,TriGer,9,18,60,18,60,True
+planted,Greedy 1-step,9,30,60,18,60,True
+planted,BSP,9,38,60,20,60,True
+null,TriGer,10,0,0,0,0,False
+null,Greedy 1-step,10,0,0,0,0,False
+null,BSP,10,0,0,0,0,False
+planted,TriGer,10,20,60,20,60,True
+planted,Greedy 1-step,10,32,60,20,60,True
+planted,BSP,10,39,60,20,60,True
+null,TriGer,11,0,0,0,0,False
+null,Greedy 1-step,11,0,0,0,0,False
+null,BSP,11,0,0,0,0,False
+planted,TriGer,11,20,60,20,60,True
+planted,Greedy 1-step,11,33,60,20,60,True
+planted,BSP,11,35,61,20,60,True
+null,TriGer,12,0,0,0,0,False
+null,Greedy 1-step,12,0,0,0,0,False
+null,BSP,12,0,0,0,0,False
+planted,TriGer,12,21,60,19,60,True
+planted,Greedy 1-step,12,33,60,19,60,True
+planted,BSP,12,35,60,20,60,True
+null,TriGer,13,0,0,0,0,False
+null,Greedy 1-step,13,0,0,0,0,False
+null,BSP,13,0,0,0,0,False
+planted,TriGer,13,18,60,18,60,True
+planted,Greedy 1-step,13,33,60,18,60,True
+planted,BSP,13,36,61,20,60,True
+null,TriGer,14,0,0,0,0,False
+null,Greedy 1-step,14,0,0,0,0,False
+null,BSP,14,0,0,0,0,False
+planted,TriGer,14,20,60,20,60,True
+planted,Greedy 1-step,14,33,60,20,60,True
+planted,BSP,14,36,60,20,60,True
+null,TriGer,15,0,0,0,0,False
+null,Greedy 1-step,15,0,0,0,0,False
+null,BSP,15,0,0,0,0,False
+planted,TriGer,15,14,60,0,60,True
+planted,Greedy 1-step,15,14,60,0,60,True
+planted,BSP,15,36,60,20,60,True
+null,TriGer,16,0,0,0,0,False
+null,Greedy 1-step,16,0,0,0,0,False
+null,BSP,16,0,0,0,0,False
+planted,TriGer,16,20,60,20,60,True
+planted,Greedy 1-step,16,34,60,20,60,True
+planted,BSP,16,37,60,20,60,True
+null,TriGer,17,0,0,0,0,False
+null,Greedy 1-step,17,0,0,0,0,False
+null,BSP,17,0,0,0,0,False
+planted,TriGer,17,20,60,20,60,True
+planted,Greedy 1-step,17,35,60,20,60,True
+planted,BSP,17,37,60,20,60,True
+null,TriGer,18,0,0,0,0,False
+null,Greedy 1-step,18,0,0,0,0,False
+null,BSP,18,0,0,0,0,False
+planted,TriGer,18,20,60,20,60,True
+planted,Greedy 1-step,18,33,60,20,60,True
+planted,BSP,18,36,60,20,60,True
+null,TriGer,19,0,0,0,0,False
+null,Greedy 1-step,19,0,0,0,0,False
+null,BSP,19,0,0,0,0,False
+planted,TriGer,19,22,60,20,60,True
+planted,Greedy 1-step,19,35,60,20,60,True
+planted,BSP,19,36,60,20,60,True
+null,TriGer,20,0,0,0,0,False
+null,Greedy 1-step,20,0,0,0,0,False
+null,BSP,20,0,0,0,0,False
+planted,TriGer,20,20,60,20,60,True
+planted,Greedy 1-step,20,35,60,20,60,True
+planted,BSP,20,35,60,20,60,True
+null,TriGer,21,0,0,0,0,False
+null,Greedy 1-step,21,0,0,0,0,False
+null,BSP,21,0,0,0,0,False
+planted,TriGer,21,18,60,16,60,True
+planted,Greedy 1-step,21,31,60,16,60,True
+planted,BSP,21,35,60,20,60,True
+null,TriGer,22,0,0,0,0,False
+null,Greedy 1-step,22,0,0,0,0,False
+null,BSP,22,0,0,0,0,False
+planted,TriGer,22,20,60,20,60,True
+planted,Greedy 1-step,22,34,60,20,60,True
+planted,BSP,22,36,60,20,60,True
+null,TriGer,23,0,0,0,0,False
+null,Greedy 1-step,23,0,0,0,0,False
+null,BSP,23,0,0,0,0,False
+planted,TriGer,23,10,60,10,60,True
+planted,Greedy 1-step,23,23,60,10,60,True
+planted,BSP,23,35,60,20,60,True
+null,TriGer,24,0,0,0,0,False
+null,Greedy 1-step,24,0,0,0,0,False
+null,BSP,24,0,0,0,0,False
+planted,TriGer,24,20,60,20,60,True
+planted,Greedy 1-step,24,34,60,20,60,True
+planted,BSP,24,37,60,20,60,True
+null,TriGer,25,0,0,0,0,False
+null,Greedy 1-step,25,0,0,0,0,False
+null,BSP,25,0,0,0,0,False
+planted,TriGer,25,12,60,0,60,True
+planted,Greedy 1-step,25,12,60,0,60,True
+planted,BSP,25,36,60,20,60,True
+null,TriGer,26,0,0,0,0,False
+null,Greedy 1-step,26,0,0,0,0,False
+null,BSP,26,0,0,0,0,False
+planted,TriGer,26,20,60,20,60,True
+planted,Greedy 1-step,26,34,60,20,60,True
+planted,BSP,26,35,60,20,60,True
+null,TriGer,27,0,0,0,0,False
+null,Greedy 1-step,27,0,0,0,0,False
+null,BSP,27,0,0,0,0,False
+planted,TriGer,27,19,60,19,60,True
+planted,Greedy 1-step,27,32,60,19,60,True
+planted,BSP,27,36,60,20,60,True
+null,TriGer,28,0,0,0,0,False
+null,Greedy 1-step,28,0,0,0,0,False
+null,BSP,28,0,0,0,0,False
+planted,TriGer,28,20,60,20,60,True
+planted,Greedy 1-step,28,34,60,20,60,True
+planted,BSP,28,39,60,20,60,True
+null,TriGer,29,0,0,0,0,False
+null,Greedy 1-step,29,0,0,0,0,False
+null,BSP,29,0,0,0,0,False
+planted,TriGer,29,20,60,20,60,True
+planted,Greedy 1-step,29,33,60,20,60,True
+planted,BSP,29,37,60,20,60,True
+null,TriGer,30,0,0,0,0,False
+null,Greedy 1-step,30,0,0,0,0,False
+null,BSP,30,0,0,0,0,False
+planted,TriGer,30,20,60,20,60,True
+planted,Greedy 1-step,30,35,60,20,60,True
+planted,BSP,30,36,60,20,60,True
+null,TriGer,31,0,0,0,0,False
+null,Greedy 1-step,31,0,0,0,0,False
+null,BSP,31,0,0,0,0,False
+planted,TriGer,31,20,60,20,60,True
+planted,Greedy 1-step,31,33,60,20,60,True
+planted,BSP,31,35,60,20,60,True
+null,TriGer,32,0,0,0,0,False
+null,Greedy 1-step,32,0,0,0,0,False
+null,BSP,32,0,0,0,0,False
+planted,TriGer,32,20,60,20,60,True
+planted,Greedy 1-step,32,33,60,20,60,True
+planted,BSP,32,39,60,20,60,True
+null,TriGer,33,0,0,0,0,False
+null,Greedy 1-step,33,0,0,0,0,False
+null,BSP,33,0,0,0,0,False
+planted,TriGer,33,20,60,18,60,True
+planted,Greedy 1-step,33,32,60,18,60,True
+planted,BSP,33,35,60,20,60,True
+null,TriGer,34,0,0,0,0,False
+null,Greedy 1-step,34,0,0,0,0,False
+null,BSP,34,0,0,0,0,False
+planted,TriGer,34,20,60,20,60,True
+planted,Greedy 1-step,34,35,60,20,60,True
+planted,BSP,34,38,60,20,60,True
+null,TriGer,35,0,0,0,0,False
+null,Greedy 1-step,35,0,0,0,0,False
+null,BSP,35,0,0,0,0,False
+planted,TriGer,35,20,60,20,60,True
+planted,Greedy 1-step,35,34,60,20,60,True
+planted,BSP,35,36,60,20,60,True
+null,TriGer,36,0,0,0,0,False
+null,Greedy 1-step,36,0,0,0,0,False
+null,BSP,36,0,0,0,0,False
+planted,TriGer,36,20,60,20,60,True
+planted,Greedy 1-step,36,35,60,20,60,True
+planted,BSP,36,35,60,20,60,True
+null,TriGer,37,0,0,0,0,False
+null,Greedy 1-step,37,0,0,0,0,False
+null,BSP,37,0,0,0,0,False
+planted,TriGer,37,22,60,20,60,True
+planted,Greedy 1-step,37,35,60,20,60,True
+planted,BSP,37,36,60,20,60,True
+null,TriGer,38,0,0,0,0,False
+null,Greedy 1-step,38,0,0,0,0,False
+null,BSP,38,0,0,0,0,False
+planted,TriGer,38,19,60,19,60,True
+planted,Greedy 1-step,38,33,60,19,60,True
+planted,BSP,38,38,60,20,60,True
+null,TriGer,39,0,0,0,0,False
+null,Greedy 1-step,39,0,0,0,0,False
+null,BSP,39,0,0,0,0,False
+planted,TriGer,39,22,60,20,60,True
+planted,Greedy 1-step,39,35,60,20,60,True
+planted,BSP,39,35,60,20,60,True
+null,TriGer,40,0,0,0,0,False
+null,Greedy 1-step,40,0,0,0,0,False
+null,BSP,40,0,0,0,0,False
+planted,TriGer,40,20,60,20,60,True
+planted,Greedy 1-step,40,32,60,20,60,True
+planted,BSP,40,37,60,20,60,True
+null,TriGer,41,0,0,0,0,False
+null,Greedy 1-step,41,0,0,0,0,False
+null,BSP,41,0,0,0,0,False
+planted,TriGer,41,20,60,20,60,True
+planted,Greedy 1-step,41,33,60,20,60,True
+planted,BSP,41,35,60,20,60,True
+null,TriGer,42,0,0,0,0,False
+null,Greedy 1-step,42,0,0,0,0,False
+null,BSP,42,0,0,0,0,False
+planted,TriGer,42,10,60,8,60,True
+planted,Greedy 1-step,42,22,60,8,60,True
+planted,BSP,42,35,60,20,60,True
+null,TriGer,43,0,0,0,0,False
+null,Greedy 1-step,43,0,0,0,0,False
+null,BSP,43,0,0,0,0,False
+planted,TriGer,43,20,60,20,60,True
+planted,Greedy 1-step,43,33,60,20,60,True
+planted,BSP,43,37,60,20,60,True
+null,TriGer,44,0,0,0,0,False
+null,Greedy 1-step,44,0,0,0,0,False
+null,BSP,44,0,0,0,0,False
+planted,TriGer,44,20,60,20,60,True
+planted,Greedy 1-step,44,35,60,20,60,True
+planted,BSP,44,37,60,20,60,True
+null,TriGer,45,0,0,0,0,False
+null,Greedy 1-step,45,0,0,0,0,False
+null,BSP,45,0,0,0,0,False
+planted,TriGer,45,22,60,20,60,True
+planted,Greedy 1-step,45,34,60,20,60,True
+planted,BSP,45,35,60,20,60,True
+null,TriGer,46,0,0,0,0,False
+null,Greedy 1-step,46,0,0,0,0,False
+null,BSP,46,0,0,0,0,False
+planted,TriGer,46,20,60,20,60,True
+planted,Greedy 1-step,46,35,60,20,60,True
+planted,BSP,46,36,60,20,60,True
+null,TriGer,47,0,0,0,0,False
+null,Greedy 1-step,47,0,0,0,0,False
+null,BSP,47,0,0,0,0,False
+planted,TriGer,47,20,60,20,60,True
+planted,Greedy 1-step,47,34,60,20,60,True
+planted,BSP,47,38,60,20,60,True
+null,TriGer,48,0,0,0,0,False
+null,Greedy 1-step,48,0,0,0,0,False
+null,BSP,48,0,0,0,0,False
+planted,TriGer,48,22,60,20,60,True
+planted,Greedy 1-step,48,34,60,20,60,True
+planted,BSP,48,36,60,20,60,True
+null,TriGer,49,0,0,0,0,False
+null,Greedy 1-step,49,0,0,0,0,False
+null,BSP,49,0,0,0,0,False
+planted,TriGer,49,20,60,20,60,True
+planted,Greedy 1-step,49,33,60,20,60,True
+planted,BSP,49,37,60,20,60,True
+null,TriGer,50,0,0,0,0,False
+null,Greedy 1-step,50,0,0,0,0,False
+null,BSP,50,0,0,0,0,False
+planted,TriGer,50,20,60,20,60,True
+planted,Greedy 1-step,50,33,60,20,60,True
+planted,BSP,50,37,60,20,60,True
