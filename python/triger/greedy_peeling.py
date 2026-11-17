@@ -2,7 +2,7 @@
 Python implementation of TriGer greedy peeling.
 
 Mirrors the MATLAB functions in matlab/methods (greedy_peeling_XY_one/all,
-greedy_peeling_X_one/all, sort_result) and adds greedy_3step, the full
+greedy_peeling_X_one/all, sort_result, sort_result_XandY) and adds greedy_3step, the full
 cross-omics + within-omic refinement pipeline. All indices are 0-based.
 """
 import numpy as np
@@ -188,6 +188,19 @@ def sort_result(Wp, blocks, symmetric=None):
             ox = np.argsort(-np.abs(sub.sum(axis=1)))
             oy = np.argsort(-np.abs(sub.sum(axis=0)))
             out.append((xi[ox], yi[oy]) + tuple(blk[2:]))
+    return out
+
+
+def sort_result_XandY(X, Y, blocks):
+    """Reorder each block's X features by descending column sums of X[xi, xi]
+    and its Y features by descending column sums of Y[yi, yi]."""
+    X = np.asarray(X, dtype=np.float64); Y = np.asarray(Y, dtype=np.float64)
+    out = []
+    for blk in blocks:
+        xi = np.asarray(blk[0], dtype=int); yi = np.asarray(blk[1], dtype=int)
+        ox = np.argsort(-X[np.ix_(xi, xi)].sum(axis=0), kind="stable")
+        oy = np.argsort(-Y[np.ix_(yi, yi)].sum(axis=0), kind="stable")
+        out.append((xi[ox], yi[oy]) + tuple(blk[2:]))
     return out
 
 

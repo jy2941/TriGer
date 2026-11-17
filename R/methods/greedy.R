@@ -177,6 +177,18 @@ sort_result <- function(Wp, blocks, symmetric = NULL) {
 }
 
 
+#' Reorder each block's X features by descending column sums of X[X, X]
+#' and its Y features by descending column sums of Y[Y, Y].
+sort_result_XandY <- function(X, Y, blocks) {
+  X <- as.matrix(X); Y <- as.matrix(Y)
+  lapply(blocks, function(blk) {
+    blk$X <- blk$X[order(colSums(X[blk$X, blk$X, drop = FALSE]), decreasing = TRUE)]
+    blk$Y <- blk$Y[order(colSums(Y[blk$Y, blk$Y, drop = FALSE]), decreasing = TRUE)]
+    blk
+  })
+}
+
+
 ## ---------------------------------------------------------------------
 ## Driver
 ## ---------------------------------------------------------------------
