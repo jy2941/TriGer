@@ -1,6 +1,6 @@
 # TriGer — Dense Community Detection for Multi-Omics Integration
 
-Python, MATLAB and R implementations of the **TriGer** algorithm accompanying our academic paper.
+Python, MATLAB and R implementations of the **TriGer** algorithm accompanying our paper, *Structured cross-omics interaction discovery with a triple-graph model*.
 
 ## Overview
 
