@@ -11,6 +11,15 @@ TriGer identifies dense bipartite communities from multi-modal omics data by joi
 
 Community size is controlled by a penalty parameter λ ∈ [1, 2]: higher values favour smaller, denser communities.
 
+## Packages
+
+To use TriGer on your own data, install the package:
+
+- **R**: [TriGer-R](https://github.com/jy2941/TriGer-R) — `remotes::install_github("jy2941/TriGer-R")`
+- **Python**: [TriGer-PyPI](https://github.com/jy2941/TriGer-PyPI) — `pip install git+https://github.com/jy2941/TriGer-PyPI.git`
+
+This repository holds the code for the paper's analyses.
+
 ## Repository Structure
 
 ```
